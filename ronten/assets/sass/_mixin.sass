@@ -1,30 +1,6 @@
 @charset "utf-8"
 
 //-----------------------
-// keta2
-//-----------------------
-@function keta2($num)
-  @if $num < 10
-    $num: "0#{$num}"
-  @else
-    $num: "#{$num}"
-
-  @return $num
-
-//-----------------------
-// keta3
-//-----------------------
-@function keta3($num)
-  @if $num < 10
-    $num: "00#{$num}"
-  @else if $num < 100
-    $num: "0#{$num}"
-  @else
-    $num: "#{$num}"
-
-  @return $num
-
-//-----------------------
 // cover
 //-----------------------
 =cover($color)
@@ -50,18 +26,6 @@
 //-----------------------
 =webfont
   font-family: "M PLUS 1p", "Arial", "HelveticaNeue-Light"
-
-//-----------------------
-// font
-//-----------------------
-=font($size, $color, $bold: false)
-  font-size: $size
-  color: $color
-
-  @if $bold == true
-    font-weight: bold
-  @else
-    font-weight: normal
 
 //-----------------------
 // topLeft
@@ -119,37 +83,3 @@
   position: $position
   left: $left
   transform: translate(-50%, 0)
-
-//-----------------------
-// img
-//-----------------------
-=img($url, $w, $h)
-  background-image: url($url)
-  background-repeat: no-repeat
-
-  // $w: width($url, $ratio)
-  // $h: height($url, $ratio)
-
-  width: $w
-  height: $h
-  background-size: $w $h
-
-  //textOut;
-  overflow: hidden
-  text-indent: $w
-
-  // text-indent: 100%
-  white-space: nowrap
-  text-align: left
-
-//-----------------------
-// bg
-//-----------------------
-
-=bg($url, $w, $h)
-  // $w: width($url, $ratio)
-  // $h: height($url, $ratio)
-
-  background-image: url($url)
-  background-repeat: no-repeat
-  background-size: $w $h

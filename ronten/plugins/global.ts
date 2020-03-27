@@ -4,6 +4,7 @@ import Vue2TouchEvents from 'vue2-touch-events';
 import axios from 'axios';
 import sanitizeHTML from 'sanitize-html';
 import OInput from '@/components/form/OInput.vue';
+import OUpload from '@/components/form/OUpload.vue';
 import Logo from '@/components/Logo.vue';
 import Header from '@/components/Header.vue';
 import '@/components/form/validation';
@@ -15,6 +16,7 @@ Vue.use(Vue2TouchEvents);
 Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('ValidationProvider', ValidationProvider);
 Vue.component('OInput', OInput);
+Vue.component('OUpload', OUpload);
 Vue.component('Logo', Logo);
 Vue.component('Header', Header);
 
@@ -23,6 +25,7 @@ Vue.prototype.$sanitize = sanitizeHTML;
 
 // axios settings
 axios.defaults.headers.common['X-Requested-By'] = 'ronten-requested-by';
+// axios.defaults.headers.common['X-Ronten-Header'] = 'kaihatsu';
 Vue.prototype.$http = axios;
 
 /**

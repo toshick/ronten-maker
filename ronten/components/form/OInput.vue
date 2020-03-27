@@ -1,5 +1,4 @@
 <template lang="pug">
-
 ValidationProvider( :name="name" :rules="validate" v-slot="state")
   b-field(
     :grouped="grouped"
@@ -24,22 +23,16 @@ ValidationProvider( :name="name" :rules="validate" v-slot="state")
     //- 親側のtemplate(slot="label")タグにてラベルを上書きできます
     slot(v-for="state in Object.keys($slots)" name="label" :slot="state")
 
-
 </template>
 <!------------------------------->
 
 <!------------------------------->
 <script lang="ts">
 import Vue from 'vue';
+import { ValidationState } from '@/types/app';
 
 type State = {
   myval: string | null;
-};
-
-type ValidationState = {
-  passed: boolean;
-  failed: boolean;
-  errors: any[];
 };
 
 export default Vue.extend({
@@ -121,7 +114,6 @@ export default Vue.extend({
       this.myval = val;
     },
   },
-  created() {},
   mounted() {
     this.myval = this.value;
   },
@@ -146,7 +138,6 @@ export default Vue.extend({
       const { passed, failed } = state;
       if (passed) return 'is-success';
       if (failed) return 'is-danger';
-
       return '';
     },
     /**
@@ -155,7 +146,6 @@ export default Vue.extend({
     getErrMessage(state: ValidationState) {
       const { errors } = state;
       let ret = '';
-      // return
       if (errors && errors.length > 0) {
         ret += errors[0];
       }

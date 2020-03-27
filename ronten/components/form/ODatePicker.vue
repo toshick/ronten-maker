@@ -1,7 +1,5 @@
 <template lang="pug">
-
 ValidationProvider( :name="name" :rules="validate" v-slot="slot")
-
   b-field(
     :grouped="grouped"
     :horizontal="horizontal"
@@ -21,42 +19,57 @@ ValidationProvider( :name="name" :rules="validate" v-slot="slot")
       position="is-top-right"
       :date-formatter="getDateDisp"
       editable)
-  
-
-
 </template>
-<!-- ================================================================================================ -->
-<script>
+<!------------------------------->
+
+<!------------------------------->
+<script lang="ts">
+import Vue from 'vue';
 import dayjs from 'dayjs';
-export default {
+import { ValidationState } from '@/types/app';
+
+type State = {
+  myval: string;
+};
+
+export default Vue.extend({
   name: 'OInput',
   props: {
     label: {
       default: '',
+      type: String,
     },
     value: {
-      default: null,
+      default: '',
+      type: String,
     },
     validate: {
       default: '',
+      type: String,
     },
     normalize: {
       default: () => [],
+      type: Array,
     },
     placeholder: {
       default: '',
+      type: String,
     },
     size: {
       default: '',
+      type: String,
     },
     icon: {
       default: '',
+      type: String,
     },
     type: {
       default: '',
+      type: String,
     },
     name: {
       default: ' ',
+      type: String,
     },
     grouped: {
       type: Boolean,
@@ -71,13 +84,13 @@ export default {
       default: false,
     },
   },
-  data() {
+  data(): State {
     return {
-      myval: null,
+      myval: '',
     };
   },
   watch: {
-    value(val) {
+    value(val: string) {
       this.myval = val;
     },
   },
@@ -98,10 +111,10 @@ export default {
     /**
      * onChangeInput
      */
-    onChangeInput(val) {
+    onChangeInput(val: string) {
       let v = val;
       if (this.normalize) {
-        this.normalize.forEach((n) => {
+        this.normalize.forEach((n: any) => {
           v = n(v);
         });
       }
@@ -111,17 +124,16 @@ export default {
     /**
      * getFieldType
      */
-    getFieldType(slotItem) {
+    getFieldType(slotItem: ValidationState) {
       const { passed, failed } = slotItem;
       if (passed) return 'is-success';
       if (failed) return 'is-danger';
-
       return '';
     },
     /**
      * getErrMessage
      */
-    getErrMessage(slotItem) {
+    getErrMessage(slotItem: ValidationState) {
       const { errors } = slotItem;
       if (!errors) return '';
       return errors[0];
@@ -129,16 +141,14 @@ export default {
     /**
      * getDateDisp
      */
-    getDateDisp(date) {
+    getDateDisp(date: string) {
       return dayjs(date).format('YYYY/MM/DD');
     },
   },
-};
+});
 </script>
-<!-- ================================================================================================ -->
-<style scoped lang="sass">
+<!------------------------------->
 
-@import @origami/stylesheets/_mixin.sass
-@import @origami/stylesheets/_variables.sass
-@import @/stylesheets/_variables.sass
+<!------------------------------->
+<style scoped lang="sass">
 </style>

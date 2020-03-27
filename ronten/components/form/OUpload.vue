@@ -1,6 +1,4 @@
 <template lang="pug">
-
-
 ValidationProvider( :name="name" :rules="validate" v-slot="state" ref="provider")
   b-field(
     :grouped="grouped"
@@ -29,30 +27,46 @@ ValidationProvider( :name="name" :rules="validate" v-slot="state" ref="provider"
     slot
 
 </template>
-<!-- ================================================================================================ -->
-<script>
-import { onSelectImg, onSelectCsv } from '@/components/form/uploadfiles';
-const dataFileInit = { file: null, filename: '', src: '', txt: '' };
-export default {
+<!------------------------------->
+
+<!------------------------------->
+<script lang="ts">
+import Vue from 'vue';
+import { ValidationProvider } from 'vee-validate';
+import { dataFileInit, onSelectImg, onSelectCsv } from '@/components/form/uploadfiles';
+import { ValidationState, FileItem } from '@/types/app';
+
+type State = {
+  file: File | null;
+  myval: FileItem;
+};
+
+export default Vue.extend({
   name: 'OUpload',
   props: {
     label: {
       default: '',
+      type: String,
     },
     value: {
-      default: '',
+      default: () => dataFileInit,
+      type: Object,
     },
     validate: {
       default: '',
+      type: String,
     },
     placeholder: {
       default: '',
+      type: String,
     },
     size: {
       default: '',
+      type: String,
     },
     name: {
       default: ' ',
+      type: String,
     },
     grouped: {
       type: Boolean,
@@ -75,18 +89,17 @@ export default {
       default: true,
     },
   },
-  data() {
+  data(): State {
     return {
       file: null,
-      myval: dataFileInit,
+      myval: { ...dataFileInit },
     };
   },
   watch: {
-    value(val) {
+    value(val: FileItem) {
       this.myval = val;
     },
   },
-  created() {},
   mounted() {
     this.myval = this.value;
   },
@@ -103,7 +116,7 @@ export default {
     /**
      * onSelectFile
      */
-    async onSelectFile(file) {
+    async onSelectFile(file: File) {
       if (file) {
         this.file = file;
         if (isImage(file)) {
@@ -115,19 +128,20 @@ export default {
           this.myval = res[0];
         }
       } else {
-        this.myval = dataFileInit;
+        this.myval = { ...dataFileInit };
         this.file = null;
       }
       this.$emit('input', this.myval);
 
       this.$nextTick(() => {
-        this.$refs.provider.validate();
+        const p = this.$refs.provider as InstanceType<typeof ValidationProvider>;
+        p.validate();
       });
     },
     /**
      * getFieldType
      */
-    getFieldType(state) {
+    getFieldType(state: ValidationState) {
       const { passed, failed } = state;
       if (passed) return 'is-success';
       if (failed) return 'is-danger';
@@ -137,29 +151,33 @@ export default {
     /**
      * getErrMessage
      */
-    getErrMessage(state) {
+    getErrMessage(state: ValidationState) {
       const { errors } = state;
       if (!errors) return '';
       return errors[0];
     },
   },
-};
+});
 
 /**
  * isImage
  */
-const isImage = (file) => {
+const isImage = (file: File) => {
+  if (!file) return false;
   return file.type.includes('image/');
 };
 
 /**
  * isCsv
  */
-const isCsv = (file) => {
+const isCsv = (file: File) => {
+  if (!file) return false;
   return file.type.includes('csv');
 };
 </script>
-<!-- ================================================================================================ -->
+<!------------------------------->
+
+<!------------------------------->
 <style scoped lang="sass">
 .icon-danger
   margin-left: 10px

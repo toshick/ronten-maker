@@ -10,16 +10,17 @@ header
             span {{loginUser.name}}
           b-dropdown-item(aria-role="listitem" @click="startLogout") ログアウト
     .btns
-      b-button(@click="startCreateRonten" :disabled="sending" size="is-medium" type="is-info") 論点追加
-      
+      b-button(@click="startCreateProject" :disabled="sending" size="is-small" type="is-info") 新規ディスカッション
+
 </template>
 <!------------------------------->
 
 <!------------------------------->
 <script lang="ts">
 import Vue from 'vue';
-import { toastNG, toastOK } from '@/common/util';
-import { CreateRontenAction, LogoutAction, LoginCheckAction } from '@/store';
+import { randomText } from '@/common/util';
+import { LogoutAction, LoginCheckAction } from '@/store';
+import { AP } from '@/store/project';
 import { LoginUser } from '@/types/app';
 
 type State = {
@@ -72,27 +73,24 @@ export default Vue.extend({
       window.location.reload();
     },
     /**
-     * startCreateRonten
+     * startCreateProject
      */
-    async startCreateRonten() {
+    async startCreateProject() {
       this.sending = true;
-
-      const res = await this.$store.dispatch(
-        CreateRontenAction({
-          user_id: +this.loginUser.id,
-          name: '新論点',
-          memo: '',
-        }),
-      );
-
+      this.result = '';
+      const res = await this.$store.dispatch(AP.CreateProject, randomText());
       if (res.error) {
-        toastNG('論点作成に失敗しました');
-        this.result = res.message;
+        this.$buefy.toast.open({
+          duration: 1000,
+          message: `ログアウトに失敗しました`,
+          position: 'is-top',
+          type: 'is-danger',
+        });
         this.sending = false;
         return;
       }
-      toastOK('論点を作成しました');
-      this.sending = false;
+
+      window.location.reload();
     },
   },
 });
@@ -109,7 +107,7 @@ export default Vue.extend({
 //----------------------
 header
   +topLeft(0, 0, fixed)
-  background-color: #FFF
+  // background-color: #FFF
   box-shadow: 0 0 3px 1px rgba($ronten-red, 0.3)
   width: 100%
   height: 65px
@@ -120,6 +118,7 @@ header
     justify-content: flex-start
     align-items: center
     padding: 10px 20px
+    height: 100%
 
 .user
   margin-left: 20px
