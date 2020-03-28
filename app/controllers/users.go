@@ -200,9 +200,9 @@ func GetUsers(c echo.Context) error {
 	}
 
 	ret := model.Users{Users: users}
-	if err := c.Bind(ret); err != nil {
-		return err
-	}
+	// if err := c.Bind(ret); err != nil {
+	// 	return err
+	// }
 
 	return c.JSON(http.StatusCreated, ret)
 }

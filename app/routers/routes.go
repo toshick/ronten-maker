@@ -1,9 +1,6 @@
 package routers
 
 import (
-	"fmt"
-	"net/http"
-
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
@@ -54,11 +51,11 @@ func SetRoutes() {
 			}
 
 			// 認証チェック
-			user := cc.LoginedUser()
-			fmt.Printf("認証チェック %+v  %v \n", user, cc.Path())
-			if user.ID == "" {
-				return cc.JSON(http.StatusUnauthorized, &model.ApiError{Error: true, Message: "need login"})
-			}
+			// user := cc.LoginedUser()
+			// fmt.Printf("認証チェック %+v  %v \n", user, cc.Path())
+			// if user.ID == "" {
+			// 	return cc.JSON(http.StatusUnauthorized, &model.ApiError{Error: true, Message: "need login"})
+			// }
 
 			return next(c)
 		}
@@ -86,12 +83,12 @@ func SetRoutes() {
 
 	// ronten
 	g.POST("/ronten/new", controllers.CreateRonten)
-	g.GET("/ronten/list", controllers.GetRontenList)
+	g.GET("/ronten/list/:hash", controllers.GetRontenList)
 	g.DELETE("/ronten/:id", controllers.DeleteRonten)
 	g.PUT("/ronten/:id", controllers.UpdateRonten)
 
 	// project
-	// g.POST("/project/new", controllers.CreateProject)
+	g.POST("/project/new", controllers.CreateProject)
 
 	e.Logger.Fatal(e.Start(":8888"))
 }

@@ -2,13 +2,14 @@
 
 header
   .container
-    Logo(:small="small")
-    .user(v-if="loginUser")
-      .user-name
-        b-dropdown(hoverable)
-          a(slot="trigger")
-            span {{loginUser.name}}
-          b-dropdown-item(aria-role="listitem" @click="startLogout") ログアウト
+    a.btn-logo(href="/")
+      Logo(:small="small")
+    //- .user(v-if="loginUser")
+    //-   .user-name
+    //-     b-dropdown(hoverable)
+    //-       a(slot="trigger")
+    //-         span {{loginUser.name}}
+    //-       b-dropdown-item(aria-role="listitem" @click="startLogout") ログアウト
     .btns
       b-button(@click="startCreateProject" :disabled="sending" size="is-small" type="is-info") 新規ディスカッション
 
@@ -18,7 +19,7 @@ header
 <!------------------------------->
 <script lang="ts">
 import Vue from 'vue';
-import { randomText } from '@/common/util';
+import { randomText, goProject } from '@/common/util';
 import { LogoutAction, LoginCheckAction } from '@/store';
 import { AP } from '@/store/project';
 import { LoginUser } from '@/types/app';
@@ -90,7 +91,9 @@ export default Vue.extend({
         return;
       }
 
-      window.location.reload();
+      if (res.hash) {
+        goProject(res.hash);
+      }
     },
   },
 });
@@ -120,6 +123,8 @@ header
     padding: 10px 20px
     height: 100%
 
+.btn-logo
+  display: block
 .user
   margin-left: 20px
 

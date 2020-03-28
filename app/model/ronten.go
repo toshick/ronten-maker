@@ -1,7 +1,7 @@
 package model
 
 type Ronten struct {
-	ID          string `json:"id" db:"id" validate:"-"`
+	ID          int    `json:"id" db:"id" validate:"-"`
 	Name        string `json:"name" db:"name" validate:"required,min=1,max=30"`
 	UserID      int    `json:"user_id" db:"user_id" validate:"required"`
 	Memo        string `json:"memo" db:"memo" validate:"-"`

@@ -8,7 +8,7 @@ export default function({ redirect, route }: { redirect: any; route: any }) {
   console.log('path', path, 'session', session);
   if (path.includes('login') || path.includes('policy')) return;
   // ユーザーが認証されていないとき
-  if (!session) {
-    return redirect('/login');
-  }
+  // if (!session) {
+  //   return redirect('/login');
+  // }
 }

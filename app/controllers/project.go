@@ -1,7 +1,12 @@
 package controllers
 
 import (
+	"database/sql"
+	"net/http"
+
+	"github.com/labstack/echo"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/toshick/ronten-maker/app/model"
 )
 
 type PostCreateProjectReq struct {
@@ -17,33 +22,41 @@ type DeleteProjectReq struct {
 /**
  * CreateUser
  */
-// func CreateProject(c echo.Context) error {
-// 	// 送信パラメータ取得
-// 	r := new(PostCreateProjectReq)
-// 	if err := c.Bind(r); err != nil {
-// 		return c.JSON(http.StatusInternalServerError, err)
-// 	}
+func CreateProject(c echo.Context) error {
+	// 送信パラメータ取得
+	r := new(PostCreateProjectReq)
+	if err := c.Bind(r); err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
 
-// 	hash := r.Hash
-// 	memo := r.Memo
-// 	fmt.Printf("CreateProject  %v %v %v \n", hash)
+	hash := r.Hash
+	memo := r.Memo
 
-// 	// データベースのコネクションを開く
-// 	db, err := sql.Open("sqlite3", model.DBURL)
-// 	defer db.Close()
-// 	if err != nil {
-// 		return err
-// 	}
+	// データベースのコネクションを開く
+	db, err := sql.Open("sqlite3", model.DBURL)
+	defer db.Close()
+	if err != nil {
+		return err
+	}
 
-// 	query, err := db.Prepare("INSERT INTO project(hash,memo) VALUES(?, ?)")
-// 	if err != nil {
-// 		return err
-// 	}
-// 	if _, err := query.Exec(hash, memo); err != nil {
-// 		return err
-// 	}
+	query, err := db.Prepare("INSERT INTO project(hash,memo) VALUES(?, ?)")
+	if err != nil {
+		return err
+	}
+	result, err := query.Exec(hash, memo)
+	if err != nil {
+		return err
+	}
 
-// 	ret := &model.Project{Hash: hash, Memo: memo}
+	insertID, err := result.LastInsertId()
+	if err != nil {
+		return err
+	}
 
-// 	return c.JSON(http.StatusCreated, ret)
-// }
+	// 取得
+	var createdProject model.Project
+	row := db.QueryRow("SELECT * FROM project where id = ?", insertID)
+	row.Scan(&createdProject.ID, &createdProject.Hash, &createdProject.Memo)
+
+	return c.JSON(http.StatusCreated, model.ProjectCreated{Created: createdProject})
+}

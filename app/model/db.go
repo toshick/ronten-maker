@@ -2,8 +2,6 @@ package model
 
 const DBURL string = "/Users/toshick/go/src/github.com/toshick/ronten-maker/db/mydb.sqlite"
 
-// const DBURL string = "/Users/toshick/go/src/gitlab.com/toshickjazz/go-study/db/mydb.sqlite"
-
 /**
  * TrashScanner
  */

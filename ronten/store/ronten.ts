@@ -21,6 +21,7 @@ export const state = () => ({
 });
 
 type MyState = ReturnType<typeof state>;
+export type CreateRontenReq = { user_id: number; name: string; memo: string; project_hash: string };
 
 /**
  * getters
@@ -37,8 +38,9 @@ export const mutations: MutationTree<MyState> = {
    * UpdateRontenList
    */
   [Mut.UpdateRontenList](state, list) {
-    state.rontenList = list;
+    state.rontenList = list || [];
   },
+
   /**
    * SelectRonten
    */
@@ -48,6 +50,7 @@ export const mutations: MutationTree<MyState> = {
       return { ...d, current: d.id === id };
     });
   },
+
   /**
    * RemoveRonten
    */
@@ -56,6 +59,7 @@ export const mutations: MutationTree<MyState> = {
       return d.id !== id;
     });
   },
+
   /**
    * UpdateRonten
    */
@@ -77,18 +81,19 @@ export const actions: ActionTree<MyState, MyState> = {
   /**
    * GetRontenList
    */
-  async [Act.GetRontenList]({ commit }) {
-    const res = await getRequest('/api/ronten/list');
+  async [Act.GetRontenList]({ commit }, hash: string) {
+    const res = await getRequest(`/api/ronten/list/${hash}`);
     if (res.error) {
       return res;
     }
     commit(Mut.UpdateRontenList, res.list);
     return res;
   },
+
   /**
    * CreateRonten
    */
-  async [Act.CreateRonten]({ commit, state }, params) {
+  async [Act.CreateRonten]({ commit, state }, params: CreateRontenReq) {
     const res = await postRequest('/api/ronten/new', params);
     if (res.error) {
       return res;
@@ -101,6 +106,7 @@ export const actions: ActionTree<MyState, MyState> = {
 
     return res;
   },
+
   /**
    * RemoveRonten
    */
@@ -117,6 +123,7 @@ export const actions: ActionTree<MyState, MyState> = {
     commit(Mut.UpdateRonten, { ...r, removed: true });
     return res;
   },
+
   /**
    * UpdateRonten
    */

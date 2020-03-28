@@ -229,3 +229,10 @@ export const randomText = () => {
   }
   return ret;
 };
+
+/**
+ * goProject
+ */
+export const goProject = (hash: string) => {
+  window.location.href = `/${hash}`;
+};

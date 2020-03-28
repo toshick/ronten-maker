@@ -18,6 +18,7 @@ export const MP = makeStoreMod(Mut, moduleName);
 export const state = () => ({});
 
 type MyState = ReturnType<typeof state>;
+type CreateProjectReq = { hash: string; memo: string };
 
 /**
  * getters
@@ -37,7 +38,8 @@ export const actions: ActionTree<MyState, MyState> = {
    * CreateRonten
    */
   async [Act.CreateProject](_, name) {
-    const res = await postRequest('/api/project/new', { name, memo: '' });
+    const params: CreateProjectReq = { hash: name, memo: '' };
+    const res = await postRequest('/api/project/new', params);
     if (res.error) {
       return res;
     }

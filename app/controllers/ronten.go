@@ -35,7 +35,8 @@ func CreateRonten(c echo.Context) error {
 	userID := r.UserID
 	memo := r.Memo
 	name := r.Name
-	fmt.Printf("CreateRonten  %v %v %v \n", userID, memo, name)
+	hash := r.ProjectHash
+	fmt.Printf("CreateRonten  %v %v %v \n", userID, memo, hash)
 
 	// データベースのコネクションを開く
 	db, err := sql.Open("sqlite3", model.DBURL)
@@ -44,11 +45,11 @@ func CreateRonten(c echo.Context) error {
 		return err
 	}
 
-	query, err := db.Prepare("INSERT INTO ronten(name,user_id,memo) VALUES(?, ?, ?)")
+	query, err := db.Prepare("INSERT INTO ronten(name,user_id,memo,project_hash) VALUES(?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
-	result, err := query.Exec(name, userID, memo)
+	result, err := query.Exec(name, userID, memo, hash)
 	if err != nil {
 		return err
 	}
@@ -61,7 +62,7 @@ func CreateRonten(c echo.Context) error {
 	// 取得
 	var createdRonten model.Ronten
 	row := db.QueryRow("SELECT * FROM ronten where id = ?", insertID)
-	row.Scan(&createdRonten.ID, &createdRonten.Name, &createdRonten.UserID, &createdRonten.Memo)
+	row.Scan(&createdRonten.ID, &createdRonten.Name, &createdRonten.UserID, &createdRonten.Memo, &createdRonten.ProjectHash)
 
 	return c.JSON(http.StatusCreated, model.RontenCreated{Created: createdRonten})
 }
@@ -147,7 +148,6 @@ func UpdateRonten(c echo.Context) error {
 	}
 	if _, err := query.Exec(name, memo, rontenID); err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
-		return err
 	}
 
 	return c.JSON(http.StatusAccepted, map[string]string{"result": "ok"})
@@ -159,19 +159,14 @@ func UpdateRonten(c echo.Context) error {
  */
 func GetRontenList(c echo.Context) error {
 
-	// for _, cookie := range c.Cookies() {
-	//   log.Printf("クッキーxxxの値 %+v  %+v", cookie.Name, cookie.Value)
-	// }
+	// パラメータ取得
+	hash := c.Param("hash")
 
-	// cookie := &http.Cookie{
-	//   Name:   "xxx",
-	//   Value:  "uwagaki",
-	//   MaxAge: 50,
-	//   Path:   "/",
-	// }
-	// http.SetCookie(c.Response(), cookie)
+	if hash == "" {
+		return c.JSON(http.StatusBadRequest, &model.ApiError{Error: true, Message: "cant find hash"})
+	}
 
-	var rontenlist []model.Ronten
+	rontenlist := []model.Ronten{}
 
 	// データベースのコネクションを開く
 	db, err := sql.Open("sqlite3", model.DBURL)
@@ -180,10 +175,8 @@ func GetRontenList(c echo.Context) error {
 		return err
 	}
 
-	rows, err := db.Query(
-		"SELECT * FROM ronten ORDER BY id DESC",
-	)
-	defer rows.Close()
+	q := fmt.Sprintf(`SELECT * FROM ronten WHERE project_hash="%s" ORDER BY id DESC`, hash)
+	rows, err := db.Query(q)
 	if err != nil {
 		return err
 	}
@@ -200,9 +193,6 @@ func GetRontenList(c echo.Context) error {
 	}
 
 	ret := model.RontenList{List: rontenlist}
-	if err := c.Bind(ret); err != nil {
-		return err
-	}
 
 	return c.JSON(http.StatusOK, ret)
 }
