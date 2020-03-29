@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/toshick/ronten-maker/app/context"
 	"github.com/toshick/ronten-maker/app/model"
@@ -61,7 +61,7 @@ func CreateUser(c echo.Context) error {
 	hash, _ := MakeUserPassHash(pass)
 
 	// データベースのコネクションを開く
-	db, err := sql.Open("sqlite3", model.DBURL)
+	db, err := sql.Open("sqlite3", model.GetDBURL())
 	defer db.Close()
 	if err != nil {
 		return err
@@ -114,7 +114,7 @@ func DeleteUser(c echo.Context) error {
 	}
 
 	// データベースのコネクションを開く
-	db, err := sql.Open("sqlite3", model.DBURL)
+	db, err := sql.Open("sqlite3", model.GetDBURL())
 	defer db.Close()
 	if err != nil {
 		return err
@@ -149,7 +149,7 @@ func DeleteUserFromEmail(c echo.Context) error {
 	}
 
 	// データベースのコネクションを開く
-	db, err := sql.Open("sqlite3", model.DBURL)
+	db, err := sql.Open("sqlite3", model.GetDBURL())
 	defer db.Close()
 	if err != nil {
 		return err
@@ -174,7 +174,7 @@ func GetUsers(c echo.Context) error {
 	var users []model.User
 
 	// データベースのコネクションを開く
-	db, err := sql.Open("sqlite3", model.DBURL)
+	db, err := sql.Open("sqlite3", model.GetDBURL())
 	defer db.Close()
 	if err != nil {
 		return err

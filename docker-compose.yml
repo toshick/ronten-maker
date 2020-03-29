@@ -1,16 +1,28 @@
 version: '3'
 services:
-  proxy:
-    build: ./proxy
+  ronten-app:
+    container_name: ronten-app
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+    environment:
+      - DBURL=/go/src/github.com/ronten-maker/db/mydb.sqlite
     ports:
-      - '8080:8080'
-    links:
-      - 'server'
-
-  server:
-    build: ./server
-    volumes:
-      - ./server/:/go/src/hello-grpc-web/server
-    ports:
-      - '9090:9090'
-    container_name: 'server'
+      - '8888:8888'
+    stdin_open: true
+    tty: true
+    restart: always
+  # nuxtweb:
+  #   container_name: nuxtweb
+  #   image: node:13.8.0-stretch-slim
+  #   build:
+  #     context: front-ronten
+  #   ports:
+  #     - 127.0.0.1:3002:3000
+  #   volumes:
+  #     - .:/front-ronten:/go/src/github.com/ronten-maker/front-ronten
+  #   stdin_open: true
+  #   tty: true
+  #   working_dir: /go/src/github.com/ronten-maker/front-ronten
+  #   command: >
+  #     npm run dev

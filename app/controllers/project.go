@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/toshick/ronten-maker/app/model"
 )
@@ -33,7 +33,7 @@ func CreateProject(c echo.Context) error {
 	memo := r.Memo
 
 	// データベースのコネクションを開く
-	db, err := sql.Open("sqlite3", model.DBURL)
+	db, err := sql.Open("sqlite3", model.GetDBURL())
 	defer db.Close()
 	if err != nil {
 		return err

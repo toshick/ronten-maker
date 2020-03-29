@@ -1,14 +1,16 @@
 -- +goose Up
 -- +goose StatementBegin
 
-CREATE TABLE ronten (
-    id INTEGER PRIMARY KEY,
-    name text,
-    user_id INTEGER,
-    memo text
+CREATE TABLE ronten
+(
+  id INTEGER PRIMARY KEY,
+  name text,
+  memo text,
+  project_hash text
 );
 
-insert into ronten values(null, 'ろんてん1', 1, 'memoです');
+insert into ronten
+values(null, 'ろんてん1', 'memoです', 'xxx');
 
 
 -- +goose StatementEnd

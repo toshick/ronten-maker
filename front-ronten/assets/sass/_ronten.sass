@@ -1,0 +1,123 @@
+@charset "utf-8"
+
+@import _mixin
+
+$size: 290px
+
+.ronten
+  width: $size
+  height: $size
+  margin: 20px
+
+  &.is-current
+    .ronten-body
+      &:before
+        background-color: $ronten-red
+
+      .ronten-name
+        color: #FFF
+
+      $rollsize: 310px
+
+      &:after
+        display: block
+        content: ""
+        pointer-events: none
+        width: $rollsize
+        height: $rollsize
+        border-radius: $rollsize / 2
+        border: dotted 8px $ronten-red
+        animation: rollRonten 16s linear infinite
+
+        $m: ($rollsize - $size) / 2
+
+        +topLeft(-$m, -$m)
+
+    .btn-remove, .btn-edit
+      color: #FFF
+
+.ronten-body
+  position: relative
+  display: flex
+  width: $size
+  height: $size
+  animation: float 4s ease infinite
+  cursor: pointer
+
+  .btn-remove, .btn-edit
+    color: $ronten-red
+
+  &:before
+    content: ""
+    display: block
+    width: $size
+    height: $size
+    border-radius: $size / 2
+    background-color: #FFF
+    box-shadow: 0 0 2px 2px rgba($ronten-red, 0.3)
+
+    +topLeft(0, 0)
+
+    animation: bg 3s ease infinite
+
+  &:hover
+    &:before
+      background-color: #e69999
+
+    .ronten-btns
+      display: block
+
+.ronten-name
+  +centerTransform
+
+  width: $size
+  font-size: 32px
+  font-weight: bold
+  text-align: center
+  padding: 0 20px
+  color: #333
+
+.ronten-btns
+  display: none
+
+  +hCenter
+  &.--top
+    top: 20px
+  &.--bottom
+    bottom: 20px
+
+@keyframes float
+  0%
+    transform: translatey(0px)
+
+  50%
+    transform: translatey(10px)
+
+  100%
+    transform: translatey(0px)
+
+@keyframes bg
+  0%
+    transform: scale(1, 1)
+
+  50%
+    transform: scale(0.95, 0.95)
+
+  100%
+    transform: scale(1, 1)
+
+@keyframes rollRonten
+  0%
+    transform: rotate(0deg)
+
+  100%
+    transform: rotate(360deg)
+
+//----------------------
+// transition
+//----------------------
+.rontenfade-enter-active, .rontenfade-leave-active
+  transition: opacity 0.6s
+
+.rontenfade-enter, .rontenfade-leave-to
+  opacity: 0

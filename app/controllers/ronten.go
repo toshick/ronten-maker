@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/toshick/ronten-maker/app/model"
 )
@@ -32,24 +32,22 @@ func CreateRonten(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, model.NewApiError(errors.Error()))
 	}
 
-	userID := r.UserID
 	memo := r.Memo
 	name := r.Name
 	hash := r.ProjectHash
-	fmt.Printf("CreateRonten  %v %v %v \n", userID, memo, hash)
 
 	// データベースのコネクションを開く
-	db, err := sql.Open("sqlite3", model.DBURL)
+	db, err := sql.Open("sqlite3", model.GetDBURL())
 	defer db.Close()
 	if err != nil {
 		return err
 	}
 
-	query, err := db.Prepare("INSERT INTO ronten(name,user_id,memo,project_hash) VALUES(?, ?, ?, ?)")
+	query, err := db.Prepare("INSERT INTO ronten(name,memo,project_hash) VALUES(?, ?, ?)")
 	if err != nil {
 		return err
 	}
-	result, err := query.Exec(name, userID, memo, hash)
+	result, err := query.Exec(name, memo, hash)
 	if err != nil {
 		return err
 	}
@@ -62,7 +60,7 @@ func CreateRonten(c echo.Context) error {
 	// 取得
 	var createdRonten model.Ronten
 	row := db.QueryRow("SELECT * FROM ronten where id = ?", insertID)
-	row.Scan(&createdRonten.ID, &createdRonten.Name, &createdRonten.UserID, &createdRonten.Memo, &createdRonten.ProjectHash)
+	row.Scan(&createdRonten.ID, &createdRonten.Name, &createdRonten.Memo, &createdRonten.ProjectHash)
 
 	return c.JSON(http.StatusCreated, model.RontenCreated{Created: createdRonten})
 }
@@ -97,7 +95,7 @@ func DeleteRonten(c echo.Context) error {
 	rontenID := c.Param("id")
 
 	// データベースのコネクションを開く
-	db, err := sql.Open("sqlite3", model.DBURL)
+	db, err := sql.Open("sqlite3", model.GetDBURL())
 	defer db.Close()
 	if err != nil {
 		return err
@@ -136,7 +134,7 @@ func UpdateRonten(c echo.Context) error {
 	name := r.Name
 
 	// データベースのコネクションを開く
-	db, err := sql.Open("sqlite3", model.DBURL)
+	db, err := sql.Open("sqlite3", model.GetDBURL())
 	defer db.Close()
 	if err != nil {
 		return err
@@ -169,7 +167,7 @@ func GetRontenList(c echo.Context) error {
 	rontenlist := []model.Ronten{}
 
 	// データベースのコネクションを開く
-	db, err := sql.Open("sqlite3", model.DBURL)
+	db, err := sql.Open("sqlite3", model.GetDBURL())
 	defer db.Close()
 	if err != nil {
 		return err
@@ -185,7 +183,7 @@ func GetRontenList(c echo.Context) error {
 		var r model.Ronten
 
 		// 値を取得
-		if err := rows.Scan(&r.ID, &r.Name, &r.UserID, &r.Memo, &r.ProjectHash); err != nil {
+		if err := rows.Scan(&r.ID, &r.Name, &r.Memo, &r.ProjectHash); err != nil {
 			return err
 		}
 

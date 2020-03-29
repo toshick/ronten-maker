@@ -8,8 +8,6 @@ CREATE TABLE project
   memo text
 );
 
-ALTER TABLE ronten ADD COLUMN project_hash text DEFAULT "";
-
 -- +goose Down
 -- SQL in this section is executed when the migration is rolled back.
 

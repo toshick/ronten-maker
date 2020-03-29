@@ -1,6 +1,13 @@
 package model
 
-const DBURL string = "/Users/toshick/go/src/github.com/toshick/ronten-maker/db/mydb.sqlite"
+import (
+	"os"
+)
+
+func GetDBURL() string {
+	url := os.Getenv("DBURL")
+	return url
+}
 
 /**
  * TrashScanner

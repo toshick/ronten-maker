@@ -2,8 +2,8 @@ package routers
 
 import (
 	"github.com/gorilla/sessions"
-	"github.com/labstack/echo"
 	"github.com/labstack/echo-contrib/session"
+	"github.com/labstack/echo/v4"
 	"github.com/toshick/ronten-maker/app/context"
 	"github.com/toshick/ronten-maker/app/controllers"
 	"github.com/toshick/ronten-maker/app/model"

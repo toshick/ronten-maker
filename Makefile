@@ -8,7 +8,9 @@ proto2:
 
 .PHONY: dev
 dev:
-	cd app && gin -i -p 3002 run main.go
+	cd app && \
+	DBURL=/Users/toshick/go/src/github.com/toshick/ronten-maker/db/mydb.sqlite \
+	gin -i -p 3002 run main.go
 
 
 .PHONY: dummyuser
