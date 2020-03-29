@@ -61,10 +61,12 @@ func SetRoutes() {
 		}
 	})
 
-	e.Static("/", "../public")
+	// routing for front
+	e.Static("/", "./public")
+	e.File("/discussion/:hash", "./public/index.html")
 
-	// e.GET("/", func(c echo.Context) error {
-	//   return c.String(http.StatusOK, "Hello, World!")
+	// e.GET("/discussion/:hash", func(c echo.Context) error {
+	// 	return c.String(http.StatusOK, "/discussion/:hash")
 	// })
 
 	//----------------------

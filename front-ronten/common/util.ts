@@ -234,5 +234,5 @@ export const randomText = () => {
  * goProject
  */
 export const goProject = (hash: string) => {
-  window.location.href = `/${hash}`;
+  window.location.href = `/discussion/${hash}`;
 };

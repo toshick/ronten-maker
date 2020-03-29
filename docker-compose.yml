@@ -4,7 +4,7 @@ services:
     container_name: ronten-app
     build:
       context: .
-      dockerfile: ./app/Dockerfile
+      dockerfile: ./Dockerfile
     environment:
       - DBURL=/go/src/github.com/ronten-maker/db/mydb.sqlite
     ports:

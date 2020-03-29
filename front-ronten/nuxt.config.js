@@ -18,21 +18,18 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       {
         rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css?family=Kosugi+Maru&display=swap',
+        href: 'https://fonts.googleapis.com/css?family=Kosugi+Maru&display=swap',
       },
       {
         rel: 'stylesheet',
-        href:
-          '//cdn.materialdesignicons.com/2.0.46/css/materialdesignicons.min.css',
+        href: '//cdn.materialdesignicons.com/2.0.46/css/materialdesignicons.min.css',
       },
     ],
     script: [
       {
         defer: true,
         src: 'https://use.fontawesome.com/releases/v5.0.8/js/all.js',
-        integrity:
-          'sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ',
+        integrity: 'sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ',
         crossorigin: 'anonymous',
       },
     ],
@@ -93,5 +90,8 @@ export default {
     '/api': {
       target: 'http://localhost:8888',
     },
+  },
+  generate: {
+    dir: '../app/public',
   },
 };
