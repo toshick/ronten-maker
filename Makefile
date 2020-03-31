@@ -10,6 +10,7 @@ proto2:
 dev:
 	cd app && \
 	DBURL=/Users/toshick/go/src/github.com/toshick/ronten-maker/db/mydb.sqlite \
+	HTTPPORT=8888 \
 	gin -i -p 3002 run main.go
 
 
@@ -33,3 +34,8 @@ goose_down:
 .PHONY: test
 test:
 	go test -v ./app/...
+
+.PHONY: deploy
+deploy:
+	docker tag ronten-maker_ronten-app gcr.io/ronten-maker/app3
+	gcloud docker -- push gcr.io/ronten-maker/app3

@@ -1,6 +1,9 @@
 package routers
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
@@ -92,5 +95,14 @@ func SetRoutes() {
 	// project
 	g.POST("/project/new", controllers.CreateProject)
 
-	e.Logger.Fatal(e.Start(":8888"))
+	port := "80"
+	p := os.Getenv("HTTPPORT")
+	if p != "" {
+		port = p
+	}
+	fmt.Printf("port %v \n", port)
+
+	port = fmt.Sprintf(":%s", port)
+
+	e.Logger.Fatal(e.Start(port))
 }

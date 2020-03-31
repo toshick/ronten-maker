@@ -26,7 +26,7 @@ type State = {
 // default
 // ----------------------
 export default Vue.extend({
-  name: 'Login',
+  name: 'Create',
   components: {},
   data(): State {
     return {
@@ -45,7 +45,7 @@ export default Vue.extend({
       if (res.error) {
         this.$buefy.toast.open({
           duration: 1000,
-          message: `ログアウトに失敗しました`,
+          message: `ディスカッション作成に失敗しました`,
           position: 'is-top',
           type: 'is-danger',
         });

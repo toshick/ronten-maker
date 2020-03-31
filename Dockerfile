@@ -20,6 +20,7 @@ WORKDIR /go/src/github.com/ronten-maker/
 
 COPY --from=front /go/src/github.com/ronten-maker/front-ronten/dist /go/src/github.com/ronten-maker/public
 
-RUN alias ll="ls -la"
+RUN chmod 775 /go/src/github.com/ronten-maker/db/mydb.sqlite
+
 CMD ["/usr/local/go/bin/go", "run", "/go/src/github.com/ronten-maker/app/main.go"]
 # CMD ["/bin/bash"]

@@ -8,7 +8,8 @@ services:
     environment:
       - DBURL=/go/src/github.com/ronten-maker/db/mydb.sqlite
     ports:
-      - '8888:8888'
+      # - '80:8888'
+      - '80:80'
     stdin_open: true
     tty: true
     restart: always

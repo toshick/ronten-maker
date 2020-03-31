@@ -91,7 +91,7 @@ export default {
       target: 'http://localhost:8888',
     },
   },
-  generate: {
-    dir: '../app/public',
-  },
+  // generate: {
+  //   dir: '../public',
+  // },
 };
