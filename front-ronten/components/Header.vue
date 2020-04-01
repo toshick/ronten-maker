@@ -115,7 +115,7 @@ export default Vue.extend({
 // header
 //----------------------
 header
-  +topLeft(0, 0, fixed)
+  // +topLeft(0, 0, fixed)
   // background-color: #FFF
   box-shadow: 0 0 3px 1px rgba($ronten-red, 0.3)
   width: 100%

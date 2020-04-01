@@ -26,7 +26,7 @@ export const toastOK = (str: string) => {
     // duration: 999991500,
     message: str,
     position: 'is-bottom-left',
-    type: 'is-success',
+    type: 'is-info',
     queue: false,
   });
 };

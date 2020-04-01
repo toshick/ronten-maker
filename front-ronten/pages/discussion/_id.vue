@@ -1,25 +1,31 @@
 <template lang="pug">
 main
   Header(:small="true")
-  .container
-    .view.view-ronten
-  //- 論点リスト
-  .rontenlist
-    .rontenlist-scroll
-      .ronten(:class="{'is-current': item.r.current}" @click.stop.prevent="() => startSelectRonten(item.r.id)" v-for="item in pointList")
-        transition(name="rontenfade")
-          .ronten-body(v-if="item.visible")
-            .ronten-name {{item.r.name}}
-            .ronten-btns.--top
-              a.btn-edit(@click.stop.prevent="() => startEditRonten(item.r)" :disabled="sending" size="is-small")
-                b-icon(pack="fas" icon="pencil-alt")
-            .ronten-btns.--bottom
-              a.btn-remove(@click.stop.prevent="() => startRemoveRonten(item.r.id)" :disabled="sending" size="is-small")
-                b-icon(pack="fas" icon="trash-alt")
+  //- .container
+  .view.view-ronten
+    .rontenfocus
+      transition(name="rontenfade")
+        p(v-if="currentRonten") {{currentRonten.name}}
+    //- 論点リスト
+    .rontenlist
+      .rontenlist-scroll
+        .ronten(:class="{'is-current': item.r.current}" @click.stop.prevent="() => startSelectRonten(item.r.id)" v-for="item in pointList")
+          transition(name="rontenfade")
+            .ronten-body(v-if="item.visible")
+              .ronten-name {{item.r.name}}
+              .ronten-btns.--top
+                a.btn-edit(@click.stop.prevent="() => startEditRonten(item.r)" :disabled="sending" size="is-small")
+                  b-icon(pack="fas" icon="pencil-alt")
+              .ronten-btns.--bottom
+                a.btn-remove(@click.stop.prevent="() => startRemoveRonten(item.r.id)" :disabled="sending" size="is-small")
+                  b-icon(pack="fas" icon="trash-alt")
+      //- 説明
+      transition(name="rontenfade")
+        b-message.msg-start(type="is-info" has-icon v-if="initialized && rontenList.length == 0")
+          |・画面下の論点追加ボタンからこのディスカッションに論点を追加してみよう
+          br
+          |・このページはこのディスカッション専用なのでurlをメモしておこう
   
-  .rontenfocus
-    transition(name="rontenfade")
-      p(v-if="currentRonten") {{currentRonten.name}}
   .bottom
     b-button(@click="startCreateRonten" :disabled="sending" size="is-mmedium" type="is-info" icon-left="plus") 論点追加
     //- .try
@@ -34,12 +40,6 @@ main
     //-   .preview(v-if="form.fileUpload && form.fileUpload.src")
     //-     a(@click="$refs.fileUpload.onSelectFile(null)") 削除
     //-     img(:src="form.fileUpload.src")
-  //- 説明
-  transition(name="rontenfade")
-    b-message.msg-start(type="is-info" has-icon v-if="initialized && rontenList.length == 0")
-      |・画面下の論点追加ボタンからこのディスカッションに論点を追加してみよう
-      br
-      |・このページはこのディスカッション専用なのでurlをメモしておこう
 
   //- モーダル
   b-modal.dialog(:active="editRonten != null" :canCancel="['escape']" :onCancel="() => startEditRonten(null)")
@@ -283,14 +283,14 @@ export default Vue.extend({
 @import @/assets/sass/_variables
 
 .view-ronten
-  padding: 180px 0 0px
+  padding: 0
 
 .rontenlist
   display: flex
   align-items: center
   overflow: scroll
   width: 100%
-  height: 500px
+  height: 400px
   scrollbar-width: none
   &::-webkit-scrollbar
     display: none
@@ -303,13 +303,13 @@ export default Vue.extend({
   padding: 0 100px
 
 .rontenfocus
-  +topLeft(65px, 0, fixed)
+  position: relative
   font-size: 52px
   font-weight: bold
   text-align: center
   padding: 20px
   // background-color: $ronten-red
-  background-color: #d96262
+  background-color: #938909
   width: 100%
   height: 160px
   color: #FFF
