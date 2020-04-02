@@ -25,7 +25,7 @@ export const toastOK = (str: string) => {
   Snackbar.open({
     // duration: 999991500,
     message: str,
-    position: 'is-bottom-left',
+    position: 'is-top',
     type: 'is-info',
     queue: false,
   });
@@ -38,7 +38,7 @@ export const toastNG = (str: string) => {
   Snackbar.open({
     // duration: 999991500,
     message: str,
-    position: 'is-bottom-left',
+    position: 'is-top',
     type: 'is-danger',
     queue: false,
   });

@@ -279,6 +279,7 @@ export default Vue.extend({
 
 <!------------------------------->
 <style scoped lang="sass">
+@import ~bulma/sass/utilities/mixins
 @import @/assets/sass/_mixin
 @import @/assets/sass/_variables
 
@@ -286,6 +287,7 @@ export default Vue.extend({
   padding: 0
 
 .rontenlist
+  position: relative
   display: flex
   align-items: center
   overflow: scroll
@@ -335,7 +337,14 @@ export default Vue.extend({
     border-radius: 0
 
 .msg-start
-  width: 640px
+  +hCenter
+  top: 40px
+  width: 80%
+  max-width: 640px
   margin: 0 auto
   border: solid 1px #7e3131
+
+  +mobile
+    .rontenfocus
+      font-size: 30px
 </style>

@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/toshick/ronten-maker/app/model"
+	"github.com/toshick/ronten-maker/app/util"
 )
 
 type UpdateRontenReq struct {
@@ -35,6 +36,8 @@ func CreateRonten(c echo.Context) error {
 	memo := r.Memo
 	name := r.Name
 	hash := r.ProjectHash
+
+	util.Log("論点つくる")
 
 	// データベースのコネクションを開く
 	db, err := sql.Open("sqlite3", model.GetDBURL())
