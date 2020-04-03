@@ -95,7 +95,7 @@ func SetRoutes() {
 	// project
 	g.POST("/project/new", controllers.CreateProject)
 
-	port := "80"
+	port := "8888"
 	p := os.Getenv("HTTPPORT")
 	if p != "" {
 		port = p
