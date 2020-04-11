@@ -11,7 +11,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "npm test",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS --config ./commtlint.config.js"
     }
   },
   "scripts": {
@@ -20,7 +20,7 @@
     "generate": "nuxt-ts generate",
     "start": "nuxt-ts start",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "test": "jest"
+    "test": "jest test"
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^0.4.0",
