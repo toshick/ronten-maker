@@ -38,4 +38,26 @@ test:
 .PHONY: deploy
 deploy:
 	docker tag ronten-maker_ronten-app gcr.io/ronten-maker/app3
-	gcloud docker -- push gcr.io/ronten-maker/app3
+	# gcloud docker -- push gcr.io/ronten-maker/app3
+	gcloud compute instances \
+		update-container ronten-maker-6 \
+		--project ronten-maker \
+		--zone asia-northeast1-a \
+		--container-image gcr.io/ronten-maker/app3:latest
+		--tags ronten-maker
+
+	gcloud compute firewall-rules create allow-http \
+		--project ronten-maker \
+		--allow tcp:80 --target-tags ronten-maker
+
+port:
+	gcloud compute ssh ronten-maker-6 \
+		--project ronten-maker \
+		--container gcr.io/ronten-maker/app3:latest \
+		--zone asia-northeast1-a \
+		-- -N -L 8888:localhost:8888
+
+
+# gcloud docker -- push gcr.io/ronten-maker/app3
+try:
+	gcloud docker -- run -it -e PROJECT_ID=ronten-maker --name ronten-maker-7 -p 80:8888 gcr.io/ronten-maker/app3:latest /bin/bash
