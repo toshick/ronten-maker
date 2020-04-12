@@ -95,6 +95,11 @@ func SetRoutes() {
 	// project
 	g.POST("/project/new", controllers.CreateProject)
 
+	// storage
+	g.POST("/storage/new", controllers.CreateStorageHandler)
+	g.POST("/storage/add", controllers.AddStorageItemHandler)
+	g.POST("/storage/backup", controllers.BackupDBHandler)
+
 	port := "8888"
 	p := os.Getenv("HTTPPORT")
 	if p != "" {

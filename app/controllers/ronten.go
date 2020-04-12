@@ -112,7 +112,7 @@ func DeleteRonten(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(http.StatusAccepted, map[string]string{"result": "ok"})
+	return c.JSON(http.StatusOK, map[string]string{"result": "ok"})
 
 }
 
@@ -151,7 +151,7 @@ func UpdateRonten(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
-	return c.JSON(http.StatusAccepted, map[string]string{"result": "ok"})
+	return c.JSON(http.StatusOK, map[string]string{"result": "ok"})
 
 }
 

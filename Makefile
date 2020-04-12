@@ -19,6 +19,13 @@ dummyuser:
 	curl -X DELETE -H 'Content-Type:application/json' -H 'X-ronten-header:kaihatsu' -d '{"email":"test@origami.com" }' http://localhost:8888/api/user/
 	curl -H 'Content-Type:application/json' -H 'X-ronten-header:kaihatsu' -d '{"email":"test@origami.com", "name":"jacobsladder", "pass":"xxx"}' http://localhost:8888/api/user/new
 
+.PHONY: strage
+dummystorage:
+	curl -X POST http://localhost:8888/api/storage/new
+dummystorage-itemadd:
+	curl -X POST http://localhost:8888/api/storage/add
+dummystorage-bk:
+	curl -X POST http://localhost:8888/api/storage/backup
 
 # sample
 # goose create add_some_column sql
@@ -61,3 +68,4 @@ port:
 # gcloud docker -- push gcr.io/ronten-maker/app3
 try:
 	gcloud docker -- run -it -e PROJECT_ID=ronten-maker --name ronten-maker-7 -p 80:8888 gcr.io/ronten-maker/app3:latest /bin/bash
+	gcloud beta run deploy --image gcr.io/ronten-maker/app3:latest
