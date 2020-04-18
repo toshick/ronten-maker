@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { AUTH_COOKIE_KEY } from '@/store';
+import { AUTH_COOKIE_KEY } from '@/store/app';
 
 export default function({ redirect, route }: { redirect: any; route: any }) {
   const session = Cookies.get(AUTH_COOKIE_KEY);

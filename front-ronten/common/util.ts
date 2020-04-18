@@ -231,6 +231,13 @@ export const randomText = () => {
 };
 
 /**
+ * goTop
+ */
+export const goTop = () => {
+  window.location.href = '/';
+};
+
+/**
  * goProject
  */
 export const goProject = (hash: string) => {

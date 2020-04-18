@@ -90,6 +90,9 @@ export default {
     '/api': {
       target: 'http://localhost:8888',
     },
+    '/ws': {
+      target: 'ws://localhost:8888',
+    },
   },
   // generate: {
   //   dir: '../public',

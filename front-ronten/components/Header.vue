@@ -11,6 +11,7 @@ header
     //-         span {{loginUser.name}}
     //-       b-dropdown-item(aria-role="listitem" @click="startLogout") ログアウト
     .btns
+      //- b-button(@click="startBackup" :disabled="sending" size="is-small" type="is-info") backup
       b-tooltip(
         label="ディスカッションを作成するとurlが変わります"
         type="is-light"
@@ -24,9 +25,8 @@ header
 <!------------------------------->
 <script lang="ts">
 import Vue from 'vue';
-import { randomText, goProject } from '@/common/util';
-import { LogoutAction } from '@/store';
-import { AP } from '@/store/project';
+import { randomText, goProject, toastNG, toastOK, goTop } from '@/common/util';
+import { projectStore, appStore } from '@/store';
 import { LoginUser, Ronten } from '@/types/app';
 
 type State = {
@@ -65,19 +65,14 @@ export default Vue.extend({
     async startLogout() {
       this.sending = true;
       this.result = '';
-      const res = await this.$store.dispatch(LogoutAction());
+      const res = await appStore.Logout();
+      this.sending = false;
       if (res.error) {
-        this.$buefy.toast.open({
-          duration: 1000,
-          message: `ログアウトに失敗しました`,
-          position: 'is-top',
-          type: 'is-danger',
-        });
-        this.sending = false;
+        toastNG('ログアウトに失敗しました');
         return;
       }
 
-      window.location.reload();
+      goTop();
     },
     /**
      * startCreateProject
@@ -85,21 +80,30 @@ export default Vue.extend({
     async startCreateProject() {
       this.sending = true;
       this.result = '';
-      const res = await this.$store.dispatch(AP.CreateProject, randomText());
+      const res = await projectStore.CreateProject(randomText());
+      this.sending = false;
       if (res.error) {
-        this.$buefy.toast.open({
-          duration: 1000,
-          message: `ログアウトに失敗しました`,
-          position: 'is-top',
-          type: 'is-danger',
-        });
-        this.sending = false;
+        toastNG('ディスカッション作成に失敗しました');
         return;
       }
 
       if (res.hash) {
         goProject(res.hash);
       }
+    },
+    /**
+     * startBackup
+     */
+    async startBackup() {
+      this.sending = true;
+      this.result = '';
+      const res = await appStore.BackupAction();
+      this.sending = false;
+      if (res.error) {
+        toastNG('バックアップに失敗しました');
+        return;
+      }
+      toastOK('バックアップした');
     },
   },
 });
@@ -140,4 +144,6 @@ header
 
 .btns
   margin-left: auto
+  button
+    margin-left: 10px
 </style>

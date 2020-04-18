@@ -32,8 +32,8 @@
 <!------------------------------->
 <script lang="ts">
 import Vue from 'vue';
-import { sleep, toastNG } from '@/common/util';
-import { LoginAction } from '@/store';
+import { sleep, toastNG, goTop } from '@/common/util';
+import { appStore } from '@/store';
 import { LoginRequest } from '@/types/app';
 
 // ----------------------
@@ -72,7 +72,7 @@ export default Vue.extend({
      * goTop
      */
     goTop() {
-      window.location.href = '/';
+      goTop();
     },
     /**
      * startLogin
@@ -80,17 +80,15 @@ export default Vue.extend({
     async startLogin() {
       this.sending = true;
       this.result = '';
-      const res = await this.$store.dispatch(LoginAction({ ...this.form }));
-
+      const res = await appStore.Login({ ...this.form });
+      this.sending = false;
       if (res.error) {
         toastNG('ログインに失敗しました');
         this.result = res.message;
         await sleep(1000);
-        this.sending = false;
         return;
       }
       this.goTop();
-      this.sending = false;
     },
   },
 });

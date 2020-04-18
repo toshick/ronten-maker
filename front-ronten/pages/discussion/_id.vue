@@ -66,7 +66,8 @@ main
 import Vue from 'vue';
 import { Ronten, FileItem, CreateRontenReq } from '@/types/app';
 import { toastNG, toastOK, dialogConfirm, sleep } from '@/common/util';
-import { A, M } from '@/store/ronten';
+import WebSocClass from '@/common/websocket';
+import { rontenStore, appStore } from '@/store';
 import { dataFileInit } from '@/components/form/uploadfiles';
 
 type State = {
@@ -80,6 +81,7 @@ type State = {
     focusrontenTitle: string;
     fileUpload: FileItem | null;
   };
+  socket: WebSocClass | null;
 };
 
 type RontenDisp = {
@@ -103,12 +105,10 @@ export default Vue.extend({
         focusrontenTitle: '',
         fileUpload: null,
       },
+      socket: null,
     };
   },
   computed: {
-    // loginUser(): LoginUser {
-    //   return this.$store.state.loginUser;
-    // },
     pointList(): RontenDisp[] {
       if (!this.rontenList) return [];
       return this.rontenList.map(
@@ -131,7 +131,7 @@ export default Vue.extend({
       );
     },
     rontenList(): Ronten[] {
-      return this.$store.getters['ronten/rontenList'] || [];
+      return rontenStore.rontenList || [];
     },
     currentRonten(): Ronten | undefined {
       if (!this.rontenList) return undefined;
@@ -153,11 +153,31 @@ export default Vue.extend({
     sleep(3000).then(() => {
       this.initialized = true;
     });
+
+    // webソケット
+    if (!this.socket) {
+      this.socket = new WebSocClass();
+      this.socket.onMsg = (msg: string) => {
+        // 自分の発行Msgは無視
+        if (msg.includes(appStore.CLIENT_ID)) return;
+
+        if (msg.includes('FOCUS_')) {
+          const id = +msg.split('_')[1];
+          rontenStore.SELECT_RONTEN(id);
+        }
+        if (msg.includes('CHANGED_') && !msg.includes(appStore.CLIENT_ID)) {
+          rontenStore.GetRontenList(this.hash);
+        }
+      };
+    }
+  },
+  beforeDestroy() {
+    if (this.socket) {
+      this.socket.destroy();
+      this.socket = null;
+    }
   },
   methods: {
-    debug() {
-      console.log('debug');
-    },
     /**
      * setFadeIn
      */
@@ -174,13 +194,11 @@ export default Vue.extend({
     async listRonten(hash: string) {
       this.sending = true;
 
-      const res = await this.$store.dispatch(A.GetRontenList, hash);
+      const res = await rontenStore.GetRontenList(hash);
+      this.sending = false;
       if (res.error) {
         toastNG('論点取得に失敗しました');
-        this.sending = false;
-        return;
       }
-      this.sending = false;
     },
 
     /**
@@ -197,7 +215,7 @@ export default Vue.extend({
     async startUpdateRonten() {
       this.sending = true;
       const { id, memo, user_id } = this.editRonten as Ronten;
-      const res = await this.$store.dispatch(A.UpdateRonten, {
+      const res = await rontenStore.UpdateRonten({
         id,
         name: this.form.focusrontenTitle,
         memo,
@@ -210,6 +228,8 @@ export default Vue.extend({
         return;
       }
       this.editRonten = null;
+      // ソケットで通知
+      this.emitUpdate();
     },
 
     /**
@@ -219,8 +239,7 @@ export default Vue.extend({
       this.sending = true;
 
       dialogConfirm('削除しますか？', async () => {
-        const res = await this.$store.dispatch(A.RemoveRonten, id);
-
+        const res = await rontenStore.RemoveRonten(id);
         if (res.error) {
           toastNG('論点削除に失敗しました');
           this.result = res.message;
@@ -229,19 +248,22 @@ export default Vue.extend({
         }
 
         sleep(600).then(() => {
-          this.$store.commit(M.RemoveRonten, id);
+          rontenStore.REMOVE_RONTEN(id);
           this.sending = false;
           this.visibleMap[id] = undefined;
         });
 
         toastOK('論点を削除しました');
+        // ソケットで通知
+        this.emitUpdate();
       });
     },
     /**
      * startSelectRonten
      */
     startSelectRonten(id: number) {
-      this.$store.commit(M.SelectRonten, id);
+      rontenStore.SELECT_RONTEN(id);
+      this.emitFocus(id);
     },
 
     /**
@@ -256,8 +278,7 @@ export default Vue.extend({
      */
     async startCreateRonten() {
       this.sending = true;
-      const res = await this.$store.dispatch(A.CreateRonten, {
-        // user_id: +this.loginUser.id,
+      const res = await rontenStore.CreateRonten({
         name: '新論点',
         memo: '',
         project_hash: this.hash,
@@ -271,6 +292,26 @@ export default Vue.extend({
         return;
       }
       toastOK('論点を作成しました');
+      // ソケットで通知
+      this.emitUpdate();
+    },
+
+    /**
+     * emitUpdate
+     */
+    emitUpdate() {
+      if (this.socket) {
+        this.socket.emitMsg(`CHANGED_${appStore.CLIENT_ID}`);
+      }
+    },
+
+    /**
+     * emitFocus
+     */
+    emitFocus(id: number) {
+      if (this.socket) {
+        this.socket.emitMsg(`FOCUS_${id}_${appStore.CLIENT_ID}`);
+      }
     },
   },
 });

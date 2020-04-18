@@ -12,7 +12,7 @@
 <!------------------------------->
 <script lang="ts">
 import Vue from 'vue';
-import { AP } from '@/store/project';
+import { projectStore } from '@/store';
 import { randomText, goProject } from '@/common/util';
 
 // ----------------------
@@ -41,7 +41,8 @@ export default Vue.extend({
      */
     async startCreateProject() {
       this.sending = true;
-      const res = await this.$store.dispatch(AP.CreateProject, randomText());
+      const res = await projectStore.CreateProject(randomText());
+      this.sending = false;
       if (res.error) {
         this.$buefy.toast.open({
           duration: 1000,
@@ -49,7 +50,6 @@ export default Vue.extend({
           position: 'is-top',
           type: 'is-danger',
         });
-        this.sending = false;
         return;
       }
 
