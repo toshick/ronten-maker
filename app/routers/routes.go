@@ -10,6 +10,7 @@ import (
 	"github.com/toshick/ronten-maker/app/context"
 	"github.com/toshick/ronten-maker/app/controllers"
 	"github.com/toshick/ronten-maker/app/model"
+	"github.com/toshick/ronten-maker/app/ws"
 )
 
 /**
@@ -63,6 +64,24 @@ func SetRoutes() {
 			return next(c)
 		}
 	})
+
+	//----------------------
+	// websocket
+	//----------------------
+	hub := ws.NewHub()
+	go hub.Run()
+	e.GET("/ws", func(c echo.Context) error {
+		ws.ServeWs(hub, c.Response(), c.Request())
+		return nil
+	})
+
+	// var addr = flag.String("addr", ":8888", "http service address")
+	// fmt.Printf("addr %v \n", addr)
+	// err := http.ListenAndServe(*addr, nil)
+	// if err != nil {
+	// 	log.Fatal("ListenAndServe: ", err)
+	// }
+	// return
 
 	// routing for front
 	e.Static("/", "./public")

@@ -25,17 +25,25 @@ dummystorage:
 dummystorage-itemadd:
 	curl -X POST http://localhost:8888/api/storage/add
 dummystorage-bk:
-	curl -X POST http://localhost:8888/api/storage/backup
+	# curl -X POST http://localhost:8888/api/storage/backup
+	curl -X POST http://34.84.39.70:8888/api/storage/backup
 
 # sample
 # goose create add_some_column sql
 #
-.PHONY: goose
-goose_up:
+.PHONY: goose_sqlite
+goose_sqlite_up:
 	goose -dir db/migration sqlite3 db/mydb.sqlite up
 
-goose_down:
+goose_sqlite_down:
 	goose -dir db/migration sqlite3 db/mydb.sqlite down
+
+# sample
+# goose create add_some_column sql
+#
+.PHONY: goose_cloudsql
+goose_cloudsql_up:
+  goose -dir db/migration postgres "user=postgres dbname=myao sslmode=disable password=root host=camaleao-postgres" up
 
 
 .PHONY: test
@@ -44,18 +52,22 @@ test:
 
 .PHONY: deploy
 deploy:
+	docker-compose build
 	docker tag ronten-maker_ronten-app gcr.io/ronten-maker/app3
-	# gcloud docker -- push gcr.io/ronten-maker/app3
-	gcloud compute instances \
-		update-container ronten-maker-6 \
-		--project ronten-maker \
-		--zone asia-northeast1-a \
-		--container-image gcr.io/ronten-maker/app3:latest
-		--tags ronten-maker
+	gcloud docker -- push gcr.io/ronten-maker/app3
+	gcloud compute instances reset ronten-maker --project ronten-maker --zone asia-northeast1-b
+	afplay se/save-ja.mp3
+	
+	# gcloud compute instances \
+	# 	update-container ronten-maker-6 \
+	# 	--project ronten-maker \
+	# 	--zone asia-northeast1-a \
+	# 	--container-image gcr.io/ronten-maker/app3:latest
+	# 	--tags ronten-maker
 
-	gcloud compute firewall-rules create allow-http \
-		--project ronten-maker \
-		--allow tcp:80 --target-tags ronten-maker
+	# gcloud compute firewall-rules create allow-http \
+	# 	--project ronten-maker \
+	# 	--allow tcp:80 --target-tags ronten-maker
 
 port:
 	gcloud compute ssh ronten-maker-6 \

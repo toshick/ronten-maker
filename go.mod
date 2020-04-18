@@ -9,6 +9,7 @@ require (
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/golang/protobuf v1.3.5
 	github.com/gorilla/sessions v1.2.0
+	github.com/gorilla/websocket v1.4.2
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/labstack/echo v3.3.10+incompatible // indirect

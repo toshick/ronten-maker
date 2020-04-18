@@ -19,6 +19,8 @@ ENV DBURL /go/src/github.com/ronten-maker/db/mydb.sqlite
 ADD . /go/src/github.com/ronten-maker/
 WORKDIR /go/src/github.com/ronten-maker/
 
+# RUN make goose_up
+
 COPY --from=front /go/src/github.com/ronten-maker/front-ronten/dist /go/src/github.com/ronten-maker/public
 
 CMD ["/usr/local/go/bin/go", "run", "/go/src/github.com/ronten-maker/app/main.go"]

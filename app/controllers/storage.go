@@ -39,7 +39,7 @@ func getClient() (*storage.Client, context.Context, error) {
 	var err error
 	ctx := context.Background()
 	if util.IsDev {
-		credentialFilePath := "../credentials/ronten-maker-d6882b1a33ac.json"
+		credentialFilePath := "../credentials/ronten-maker-f7c980a9afeb.json"
 		client, err = storage.NewClient(ctx, option.WithCredentialsFile(credentialFilePath))
 	} else {
 		client, err = storage.NewClient(ctx)
@@ -135,7 +135,10 @@ func BackupDB() (*storage.Client, *storage.ObjectAttrs, error) {
 		return nil, nil, err
 	}
 
-	source := "../db/mydb.sqlite"
+	source := "db/mydb.sqlite"
+	if util.IsDev {
+		source = "../db/mydb.sqlite"
+	}
 	filename := fmt.Sprintf("mydb-%v.sqlite", util.TimeStampStr())
 
 	f, err := os.Open(source)
