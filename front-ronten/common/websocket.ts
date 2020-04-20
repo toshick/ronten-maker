@@ -15,7 +15,10 @@ export default class WebSocClass {
   conn: null | WebSocket = null;
 
   constructor() {
-    const url = 'ws://' + document.location.host + '/ws';
+    const loc = window.location;
+    const uri = loc.protocol === 'https:' ? 'wss:' : 'ws:';
+    const url = `${uri}${loc.host}/ws`;
+
     const conn = new WebSocket(url);
     conn.onopen = () => {
       if (this.onOpen) this.onOpen();

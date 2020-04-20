@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 export default {
   mode: 'spa',
   /*
@@ -96,5 +99,14 @@ export default {
   },
   // generate: {
   //   dir: '../public',
+  // },
+  /**
+   * server
+   */
+  // server: {
+  //   https: {
+  //     key: fs.readFileSync(path.resolve(__dirname, 'server/server.key')),
+  //     cert: fs.readFileSync(path.resolve(__dirname, 'server/server.crt')),
+  //   },
   // },
 };

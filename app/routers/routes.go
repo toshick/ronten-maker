@@ -119,11 +119,17 @@ func SetRoutes() {
 	g.POST("/storage/add", controllers.AddStorageItemHandler)
 	g.POST("/storage/backup", controllers.BackupDBHandler)
 
-	port := "8888"
-	p := os.Getenv("HTTPPORT")
+	port := "80"
+	var p string
+	p = os.Getenv("PORT")
 	if p != "" {
 		port = p
 	}
+	p = os.Getenv("HTTPPORT")
+	if p != "" {
+		port = p
+	}
+
 	fmt.Printf("port %v \n", port)
 
 	port = fmt.Sprintf(":%s", port)

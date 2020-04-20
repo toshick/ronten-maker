@@ -1,6 +1,10 @@
 import loadImage, { MetaData, CanvasTrueOptions } from 'blueimp-load-image';
 import { SnackbarProgrammatic as Snackbar, DialogProgrammatic as Dialog, ModalProgrammatic as Modal } from 'buefy';
 
+export const isDev = (() => {
+  return process.env.IS_DEV === 'true';
+})();
+
 export type ImgB64ResizeMaxWidthReurn = {
   imgb64: string;
   width: number;

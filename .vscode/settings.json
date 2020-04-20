@@ -1,6 +1,7 @@
 {
   "editor.minimap.enabled": false,
   "favorites.resources": [
-    "front-ronten/store"
+    "front-ronten/store",
+    "Makefile"
   ]
 }

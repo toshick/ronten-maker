@@ -385,7 +385,12 @@ export default Vue.extend({
   margin: 0 auto
   border: solid 1px #7e3131
 
-  +mobile
-    .rontenfocus
-      font-size: 30px
++mobile
+  .rontenfocus
+    font-size: 30px
+  .rontenlist
+    height: 300px
+
+  .rontenlist-scroll
+    padding: 0 40px
 </style>

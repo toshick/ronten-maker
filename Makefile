@@ -51,23 +51,19 @@ test:
 	go test -v ./app/...
 
 .PHONY: deploy
-deploy:
+deploy-gce:
 	docker-compose build
 	docker tag ronten-maker_ronten-app gcr.io/ronten-maker/app3
 	gcloud docker -- push gcr.io/ronten-maker/app3
 	gcloud compute instances reset ronten-maker --project ronten-maker --zone asia-northeast1-b
 	afplay se/save-ja.mp3
-	
-	# gcloud compute instances \
-	# 	update-container ronten-maker-6 \
-	# 	--project ronten-maker \
-	# 	--zone asia-northeast1-a \
-	# 	--container-image gcr.io/ronten-maker/app3:latest
-	# 	--tags ronten-maker
 
-	# gcloud compute firewall-rules create allow-http \
-	# 	--project ronten-maker \
-	# 	--allow tcp:80 --target-tags ronten-maker
+deploy-cloudrun:
+	docker-compose build
+	docker tag ronten-maker_ronten-app gcr.io/ronten-maker/app3
+	gcloud docker -- push gcr.io/ronten-maker/app3
+	gcloud run deploy --image gcr.io/ronten-maker/app3 --platform managed
+	afplay se/save-ja.mp3
 
 port:
 	gcloud compute ssh ronten-maker-6 \

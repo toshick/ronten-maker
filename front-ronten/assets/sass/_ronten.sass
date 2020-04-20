@@ -1,5 +1,6 @@
 @charset "utf-8"
 
+@import ~bulma/sass/utilities/mixins
 @import _mixin
 
 $size: 290px
@@ -81,8 +82,10 @@ $size: 290px
   display: none
 
   +hCenter
+
   &.--top
     top: 20px
+
   &.--bottom
     bottom: 20px
 
@@ -121,3 +124,40 @@ $size: 290px
 
 .rontenfade-enter, .rontenfade-leave-to
   opacity: 0
+
+//----------------------
+// mobile
+//----------------------
++mobile
+  $sizeS: 190px
+
+  .ronten
+    width: $sizeS
+    height: $sizeS
+    margin: 10px
+
+    &.is-current
+      .ronten-body
+        $rollsizeS: $sizeS + 20px
+
+        &:after
+          width: $rollsizeS
+          height: $rollsizeS
+          border-radius: $rollsizeS / 2
+
+          $mS: ($rollsizeS - $sizeS) / 2
+
+          +topLeft(-$mS, -$mS)
+
+  .ronten-body
+    width: $sizeS
+    height: $sizeS
+
+    &:before
+      width: $sizeS
+      height: $sizeS
+      border-radius: $sizeS / 2
+
+  .ronten-name
+    font-size: 24px
+    width: $sizeS
