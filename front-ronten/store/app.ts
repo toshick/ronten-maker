@@ -84,7 +84,7 @@ export default class MyClass extends VuexModule {
   }
 
   @Action
-  async BackupAction() {
+  async Backup() {
     const res = await postRequest('/api/storage/backup');
     if (res.error) {
       return res;

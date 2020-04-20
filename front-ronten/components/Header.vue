@@ -97,7 +97,7 @@ export default Vue.extend({
     async startBackup() {
       this.sending = true;
       this.result = '';
-      const res = await appStore.BackupAction();
+      const res = await appStore.Backup();
       this.sending = false;
       if (res.error) {
         toastNG('バックアップに失敗しました');

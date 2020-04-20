@@ -25,7 +25,6 @@ Vue.prototype.$sanitize = sanitizeHTML;
 
 // axios settings
 axios.defaults.headers.common['X-Requested-By'] = 'ronten-requested-by';
-// axios.defaults.headers.common['X-Ronten-Header'] = 'kaihatsu';
 Vue.prototype.$http = axios;
 
 /**

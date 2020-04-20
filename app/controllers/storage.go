@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -113,11 +114,31 @@ func AddStorageTextFile(filename string, str string) (*storage.Client, error) {
 }
 
 /**
+ * DownloadDBHandler
+ */
+func DownloadDBHandler(c echo.Context) error {
+	err := downloadDB()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, model.NewApiError(fmt.Sprintf("Failed to Download DB: %v", err)))
+	}
+	// defer client.Close()
+
+	return c.JSON(http.StatusOK, model.NewApiSuccess(fmt.Sprintf("DB Download succeed \n")))
+}
+
+/**
+ * downloadDB
+ */
+func downloadDB() error {
+	return errors.New("(*>△<)<ナーンナーンっっ")
+}
+
+/**
  * BackupDBHandler
  */
 func BackupDBHandler(c echo.Context) error {
 	// add text file
-	client, attrs, err := BackupDB()
+	client, attrs, err := backupDB()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, model.NewApiError(fmt.Sprintf("Failed to backup DB: %v", err)))
 	}
@@ -129,7 +150,7 @@ func BackupDBHandler(c echo.Context) error {
 /**
  * BackupDB
  */
-func BackupDB() (*storage.Client, *storage.ObjectAttrs, error) {
+func backupDB() (*storage.Client, *storage.ObjectAttrs, error) {
 	client, ctx, err := getClient()
 	if err != nil {
 		return nil, nil, err

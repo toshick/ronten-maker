@@ -1,5 +1,6 @@
 {
   "favorites.resources": [
-    "package.json"
+    "package.json",
+    "store"
   ]
 }

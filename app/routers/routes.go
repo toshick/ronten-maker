@@ -118,6 +118,9 @@ func SetRoutes() {
 	g.POST("/storage/new", controllers.CreateStorageHandler)
 	g.POST("/storage/add", controllers.AddStorageItemHandler)
 	g.POST("/storage/backup", controllers.BackupDBHandler)
+	g.GET("/storage/download", func(c echo.Context) error {
+		return c.Inline("../db/mydb.sqlite", "mydb.sqlite")
+	})
 
 	port := "80"
 	var p string
