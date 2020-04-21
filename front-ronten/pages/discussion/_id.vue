@@ -370,7 +370,7 @@ export default Vue.extend({
     margin: 0 10px
 
 .bottom
-  +bottomLeft(0, 0)
+  +bottomLeft(0, 0, fixed)
   width: 100%
   text-align: center
   .button

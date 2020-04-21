@@ -10,6 +10,7 @@ import (
 	"github.com/toshick/ronten-maker/app/context"
 	"github.com/toshick/ronten-maker/app/controllers"
 	"github.com/toshick/ronten-maker/app/model"
+	"github.com/toshick/ronten-maker/app/util"
 	"github.com/toshick/ronten-maker/app/ws"
 )
 
@@ -119,7 +120,11 @@ func SetRoutes() {
 	g.POST("/storage/add", controllers.AddStorageItemHandler)
 	g.POST("/storage/backup", controllers.BackupDBHandler)
 	g.GET("/storage/download", func(c echo.Context) error {
-		return c.Inline("../db/mydb.sqlite", "mydb.sqlite")
+		path := "db/mydb.sqlite"
+		if util.IsDev {
+			path = "../db/mydb.sqlite"
+		}
+		return c.Inline(path, "mydb.sqlite")
 	})
 
 	port := "80"
