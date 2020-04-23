@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -32,8 +33,6 @@ func CreateProject(c echo.Context) error {
 	// defer client.Close()
 	// logger := client.Logger("logName").StandardLogger(logging.Info)
 	// logger.Println("ログをだしてみるぞ")
-
-	util.Log("ログだすよ")
 
 	// 送信パラメータ取得
 	r := new(PostCreateProjectReq)
@@ -71,6 +70,12 @@ func CreateProject(c echo.Context) error {
 	var createdProject model.Project
 	row := db.QueryRow("SELECT * FROM project where id = ?", insertID)
 	row.Scan(&createdProject.ID, &createdProject.Hash, &createdProject.Memo)
+
+	// slack
+	if !util.IsDev {
+		txt := fmt.Sprintf("ディスカッションさくせい <http://ronten.website/discussion/%v>", createdProject.Hash)
+		util.PostSlack("ronten", txt)
+	}
 
 	return c.JSON(http.StatusCreated, model.ProjectCreated{Created: createdProject})
 }
