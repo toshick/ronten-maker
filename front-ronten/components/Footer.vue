@@ -8,6 +8,7 @@ footer(:class="{'is-bottom': bottom}")
 <script lang="ts">
 import Vue from 'vue';
 export default Vue.extend({
+  name: 'Footer',
   props: {
     bottom: {
       default: false,

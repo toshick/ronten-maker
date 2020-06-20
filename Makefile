@@ -39,3 +39,8 @@ deploy-gce:
 # 	gcloud docker -- push gcr.io/ronten-maker/app4
 # 	gcloud run deploy --image gcr.io/ronten-maker/app4 --platform managed
 # 	afplay se/save-ja.mp3
+
+.PHONY: tryci
+tryci:
+	circleci config validate
+	echo "finished"

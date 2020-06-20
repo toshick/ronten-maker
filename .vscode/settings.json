@@ -2,7 +2,6 @@
   "editor.minimap.enabled": false,
   "favorites.resources": [
     "front-ronten/store",
-    "Makefile",
-    "app/util/util.go"
+    "Makefile"
   ]
 }

@@ -121,11 +121,9 @@ export default Vue.extend({
             this.setFadeIn(r.id, this.initialized);
           }
 
-          visible = !!visible;
-
           return {
             r,
-            visible,
+            visible: !!visible,
           };
         },
       );
