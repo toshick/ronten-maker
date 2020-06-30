@@ -1,7 +1,5 @@
 {
   "editor.minimap.enabled": false,
-  "favorites.resources": [
-    "front-ronten/store",
-    "Makefile"
-  ]
+  "favorites.resources": ["front-ronten/store", "Makefile"],
+  "editor.formatOnSave": true
 }
