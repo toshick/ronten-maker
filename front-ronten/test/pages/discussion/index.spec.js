@@ -1,33 +1,18 @@
 // import flushPromises from 'flush-promises';
-import DiscussionDetail from '@/pages/discussion/_id.vue';
+import Index from '@/pages/discussion/index.vue';
 import { getWrapper } from '@/test/setting';
-jest.mock('@/store');
-
-/**
- * mock
- */
-jest.mock('@/store', () => ({
-  rontenStore: {
-    rontenList: [],
-    GetRontenList: () => Promise.resolve({}),
-  },
-  appStore: {
-    CLIENT_ID: 'TEST_CLIENT_ID',
-  },
-}));
-jest.mock('@/common/util', () => ({
-  toastNG: () => Promise.resolve(),
-  randomText: () => 'randomtxt',
-  sleep: () => Promise.resolve(),
-}));
 
 /**
  * describe
  */
-describe('page create', () => {
+describe('Index', () => {
   let wrapper;
   beforeEach(() => {
-    wrapper = getWrapper(DiscussionDetail, { mocks: { $route: { params: { id: '/discussion/XXXXXXXX' } } } });
+    jest.spyOn(window.location, 'assign').mockImplementation((l) => {
+      expect(l).toEqual('/create');
+    });
+    // window.location.assign.mockClear();
+    wrapper = getWrapper(Index);
   });
 
   it('is a Vue instance', () => {
