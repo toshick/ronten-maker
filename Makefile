@@ -44,3 +44,7 @@ deploy-gce:
 tryci:
 	circleci config validate
 	echo "finished"
+
+.PHONY: checkci
+checkci:
+	circleci config validate
