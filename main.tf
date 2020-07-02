@@ -1,32 +1,3 @@
-# resource "docker_image" "nginx" {
-#   name         = "nginx:latest"
-#   keep_locally = false
-# }
-
-# resource "docker_container" "nginx" {
-#   image = docker_image.nginx.latest
-#   name  = "tutorial-toshick"
-#   ports {
-#     internal = 80
-#     external = 8008
-#   }
-# }
-
-# service_account {
-#   email  = "<サービスアカウント>"
-#   scopes = ["cloud-platform"]
-# }
-
-
-
-# data "google_compute_network" "default" {
-#   name = "default"
-# }
-
-# variable "port_number" {
-#   type    = "string"
-#   default = "8080"
-# }
 
 variable "docker_declaration" {
   type    = string
@@ -35,7 +6,7 @@ variable "docker_declaration" {
 
 
 provider "google" {
-  credentials = "${file("credentials/ronten-maker-f7c980a9afeb.json")}"
+  credentials = file("credentials/ronten-maker-f7c980a9afeb.json")
   project     = "ronten-maker"
   region      = "asia-northeast1"
 }
@@ -44,7 +15,7 @@ resource "google_compute_address" "static" {
   name = "ipv4-address"
 }
 
-# 10GB
+# インスタンス設定
 resource "google_compute_instance" "apps-gcp-terraform" {
 
   name         = "ronten-maker-terraform"
@@ -55,7 +26,7 @@ resource "google_compute_instance" "apps-gcp-terraform" {
     initialize_params {
       size  = 10 #ディスクサイズ(GB)
       type  = "pd-standard"
-      image = "debian-cloud/debian-9"
+      image = "cos-cloud/cos-stable" //osの image
     }
   }
 
@@ -72,8 +43,10 @@ resource "google_compute_instance" "apps-gcp-terraform" {
   # VMインスタンスのファイアウォールのところ（valueはきっとファイアウォール画面のtarget名）
   tags = ["http-server"]
 
-  # 起動時に実行するスクリプト
-  # metadata_startup_script = "echo hello"
+  service_account {
+    email  = "ronten-maker2@ronten-maker.iam.gserviceaccount.com"
+    scopes = ["cloud-platform"]
+  }
 }
 
 # VPCネットワーク内のファイアウォールアイテムを追加する
@@ -86,8 +59,6 @@ resource "google_compute_instance" "apps-gcp-terraform" {
 #     ports    = ["${var.port_number}"]
 #   }
 # }
-
-
 
 
 
