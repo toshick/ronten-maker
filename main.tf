@@ -12,7 +12,9 @@ provider "google" {
 }
 
 resource "google_compute_address" "static" {
-  name = "ipv4-address"
+  name         = "ipv4-address"
+  region       = "asia-northeast1"
+  network_tier = "PREMIUM"
 }
 
 # インスタンス設定

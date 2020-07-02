@@ -18,16 +18,6 @@ jobs:
 
 workflows:
   version: 2
-  hello_and_goodbye:
-    jobs:
-      - build:
-          requires:
-            - test
-      - test
-      - nyao:
-          requires:
-            - build
-
   build_and_test:
     jobs:
       - test
@@ -38,6 +28,10 @@ workflows:
           type: approval # <<< このキーを使うと Workflow を「待機」状態にします
           requires: # test2 が完了すると hold ジョブに処理が移ります
             - build
+          filters:
+            branches:
+              only:
+                - master
       - nyao:
           requires:
             - omachikudasai
