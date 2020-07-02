@@ -26,7 +26,7 @@ test:
 
 .PHONY: deploy
 deploy-gce:
-	wget -O "db/mydb.sqlite" http://ronten.website/api/storage/download
+	# wget -O "db/mydb.sqlite" http://ronten.website/api/storage/download
 	docker-compose build --no-cache
 	docker tag ronten-maker_ronten-app gcr.io/ronten-maker/app3
 	gcloud docker -- push gcr.io/ronten-maker/app3
@@ -39,3 +39,7 @@ deploy-gce:
 # 	gcloud docker -- push gcr.io/ronten-maker/app4
 # 	gcloud run deploy --image gcr.io/ronten-maker/app4 --platform managed
 # 	afplay se/save-ja.mp3
+
+.PHONY: tryci
+tryci:
+	circleci config validate

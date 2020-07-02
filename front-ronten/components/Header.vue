@@ -35,6 +35,7 @@ type State = {
 };
 
 export default Vue.extend({
+  name: 'Header',
   props: {
     small: {
       default: false,

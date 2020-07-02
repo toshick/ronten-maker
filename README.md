@@ -1,8 +1,13 @@
-#GO勉強
+#論点メーカー
 
-##しようね
+##論点を整理して有意義なディスカッションを展開するためのツールです
 
+- toshickのGCP勉強のためのプロジェクトです
 
+## 環境
 
-credencialは `GOOGLE_APPLICATION_CREDENTIALS`という環境変数でjsonファイルを指定しよう
+- frontend：nuxt
+- backend：Golang
+- インフラ：GCP
+- Dockerを利用してgoサーバを起動し、sqliteにデータを保持します。
 

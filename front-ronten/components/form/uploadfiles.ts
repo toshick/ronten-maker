@@ -10,7 +10,7 @@ export const onSelectImg = (file: File | File[]) => {
   const ret: Array<FileItem> = [];
 
   return new Promise<Array<FileItem>>((resolve) => {
-    let files = Array.isArray(file) ? file : [file];
+    const files = Array.isArray(file) ? file : [file];
 
     // ロードされる度にカウントダウンします
     let restCount = files.length;
@@ -53,7 +53,7 @@ export const onSelectCsv = (file: File) => {
   const ret: Array<FileItem> = [];
 
   return new Promise<Array<FileItem>>((resolve) => {
-    let files = Array.isArray(file) ? file : [file];
+    const files = Array.isArray(file) ? file : [file];
 
     // ロードされる度にカウントダウンします
     let restCount = files.length;

@@ -11,7 +11,7 @@ import Vue from 'vue';
 // ----------------------
 export default Vue.extend({
   mounted() {
-    location.href = '/create';
+    window.location.assign('/create');
   },
 });
 </script>

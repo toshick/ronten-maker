@@ -1,4 +1,5 @@
 module.exports = {
+  // automock: true,
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
     '^~/(.*)$': '<rootDir>/$1',

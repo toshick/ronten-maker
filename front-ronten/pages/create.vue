@@ -13,7 +13,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { projectStore } from '@/store';
-import { randomText, goProject } from '@/common/util';
+import { randomText, goProject, toastNG } from '@/common/util';
 
 // ----------------------
 // type
@@ -44,12 +44,7 @@ export default Vue.extend({
       const res = await projectStore.CreateProject(randomText());
       this.sending = false;
       if (res.error) {
-        this.$buefy.toast.open({
-          duration: 1000,
-          message: `ディスカッション作成に失敗しました`,
-          position: 'is-top',
-          type: 'is-danger',
-        });
+        toastNG('ディスカッション作成に失敗しました');
         return;
       }
 
