@@ -1,44 +1,43 @@
-
 version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:4.8.2
+      - image: circleci/node:13.8
     steps:
       - run: echo "hello world 1"
   test:
     docker:
-      - image: circleci/node:4.8.2
+      - image: circleci/node:13.8
     steps:
       - run: echo "hello world 2"
   nyao:
     docker:
-      - image: circleci/node:4.8.2
+      - image: circleci/node:13.8
     steps:
       - run: echo "nyao"
 
 workflows:
   version: 2
-  # hello_and_goodbye:
-  #   jobs:
-  #     - build:
-  #         requires: 
-  #           - test
-  #     - test
-  #     - nyao:
-  #         requires: 
-  #           - build
+  hello_and_goodbye:
+    jobs:
+      - build:
+          requires:
+            - test
+      - test
+      - nyao:
+          requires:
+            - build
 
   build_and_test:
     jobs:
       - test
       - build:
-          requires: 
+          requires:
             - test
       - omachikudasai: # <<< ジョブの続きを実行するには CircleCI の Web ページ上で手動で承認する必要があります。
           type: approval # <<< このキーを使うと Workflow を「待機」状態にします
           requires: # test2 が完了すると hold ジョブに処理が移ります
             - build
       - nyao:
-          requires: 
+          requires:
             - omachikudasai
