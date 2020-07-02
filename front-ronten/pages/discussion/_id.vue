@@ -55,7 +55,6 @@ main
               validate="required"
               )
         footer.modal-card-foot.has-text-right
-          button.button(v-show="false" @click.stop.prevent) ダミー
           button.button(@click.stop.prevent="() => startEditRonten(null)") とじる
           button.button.is-primary(@click.stop.prevent="() => startUpdateRonten()" :disabled="invalid || sending") 保存
 </template>
