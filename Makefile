@@ -21,8 +21,11 @@ goose_sqlite_down:
 	goose -dir db/migration sqlite3 db/mydb.sqlite down
 
 .PHONY: test
-test:
+test-backend:
 	go test -v ./app/...
+
+# test-frontend:
+# 	cd front-ronten && npm run test
 
 .PHONY: deploy
 deploy-gce:

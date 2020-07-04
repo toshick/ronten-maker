@@ -3,6 +3,13 @@ orbs:
   gcp-gcr: circleci/gcp-gcr@0.7.1
   # gcp-cli: circleci/gcp-cli@1.8.4
 jobs:
+  test:
+    docker:
+      - image: circleci/golang:1.13
+    steps:
+      - checkout
+      - run:
+          command: make test-backend
   build:
     machine: true
     steps:
@@ -46,9 +53,12 @@ jobs:
   #           echo "Digest is: $(</tmp/digest.txt)"
 
 workflows:
-  testbuild:
+  build-and-push:
     jobs:
-      - build
+      - test
+      - build:
+          requires:
+            - test
   # install_and_configure_cli:
   #   jobs:
   #     - gcp-cli/install_and_initialize_cli:
