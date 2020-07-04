@@ -1,7 +1,15 @@
 version: 2.1
+
+# --------------------
+# orbs
+# --------------------
 orbs:
   gcp-gcr: circleci/gcp-gcr@0.7.1
   # gcp-cli: circleci/gcp-cli@1.8.4
+
+# --------------------
+# jobs
+# --------------------
 jobs:
   test:
     docker:
@@ -21,37 +29,42 @@ jobs:
             docker images > /tmp/images.txt
       - store_artifacts:
           path: /tmp/images.txt
+      # あとでpushするために保存
+      - run:
+          command: |
+            mkdir -p /tmp/docker
+            docker save gcr.io/ronten-maker/app3:latest -o /tmp/docker/image
+      - persist_to_workspace:
+          root: /tmp/docker
+          paths:
+            - image
+
   push-gcr:
     executor: gcp-gcr/default
     steps:
+      # 保存してあるimageをロード
+      - attach_workspace:
+          at: /tmp/docker
+      - run: docker load -i /tmp/docker/image
       - checkout
       - gcp-gcr/gcr-auth
+      # push
       - gcp-gcr/push-image:
           digest-path: /tmp/digest.txt
-          image: orb-test
-          registry-url: eu.gcr.io
+          registry-url: gcr.io
+          image: app3
+          tag: latest
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
       - run:
           command: make ci-gce-reset
+      - store_artifacts:
+          path: /tmp/digest.txt
 
-  # build-and-push:
-  #   executor: gcp-gcr/default
-  #   steps:
-  #     - checkout
-  #     - gcp-gcr/gcr-auth
-  #     - gcp-gcr/build-image:
-  #         image: orb-test
-  #         registry-url: eu.gcr.io
-  #     - gcp-gcr/push-image:
-  #         digest-path: /tmp/digest.txt
-  #         image: orb-test
-  #         registry-url: eu.gcr.io
-  #     - run:
-  #         command: |
-  #           echo "Digest is: $(</tmp/digest.txt)"
-
+# --------------------
+# workflows
+# --------------------
 workflows:
   build-and-push:
     jobs:
@@ -59,6 +72,9 @@ workflows:
       - build:
           requires:
             - test
+      - push-gcr:
+          requires:
+            - build
   # install_and_configure_cli:
   #   jobs:
   #     - gcp-cli/install_and_initialize_cli:
