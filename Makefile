@@ -55,4 +55,4 @@ ci-gcr-push:
 	gcloud docker -- push gcr.io/ronten-maker/app3
 	
 ci-gce-reset:
-	gcloud compute instances reset ronten-maker --project ronten-maker --zone asia-northeast1-b
+	gcloud compute instances reset ronten-maker-terraform --project ronten-maker --zone asia-northeast1-b
