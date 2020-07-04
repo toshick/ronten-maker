@@ -1,37 +1,50 @@
-version: 2
+version: 2.1
+orbs:
+  # gcp-gcr: circleci/gcp-gcr@0.7.1
+  gcp-cli: circleci/gcp-cli@1.8.4
 jobs:
-  build:
-    docker:
-      - image: circleci/node:13.8
+  ci-build:
+    machine: true
     steps:
-      - run: echo "hello world 1"
-  test:
-    docker:
-      - image: circleci/node:13.8
-    steps:
-      - run: echo "hello world 2"
-  nyao:
-    docker:
-      - image: circleci/node:13.8
-    steps:
-      - run: echo "nyao"
+      - checkout
+      - run:
+          command: make ci-build
+  # build-and-push:
+  #   executor: gcp-gcr/default
+  #   steps:
+  #     - checkout
+  #     - gcp-gcr/gcr-auth
+  #     - gcp-gcr/build-image:
+  #         image: orb-test
+  #         registry-url: eu.gcr.io
+  #     - gcp-gcr/push-image:
+  #         digest-path: /tmp/digest.txt
+  #         image: orb-test
+  #         registry-url: eu.gcr.io
+  #     - run:
+  #         command: |
+  #           echo "Digest is: $(</tmp/digest.txt)"
 
 workflows:
-  version: 2
-  build_and_test:
+  testbuild:
     jobs:
-      - test
-      - build:
-          requires:
-            - test
-      - omachikudasai: # <<< ジョブの続きを実行するには CircleCI の Web ページ上で手動で承認する必要があります。
-          type: approval # <<< このキーを使うと Workflow を「待機」状態にします
-          requires: # test2 が完了すると hold ジョブに処理が移ります
-            - build
-          filters:
-            branches:
-              only:
-                - master
-      - nyao:
-          requires:
-            - omachikudasai
+      - ci-build
+  # install_and_configure_cli:
+  #   jobs:
+  #     - gcp-cli/install_and_initialize_cli:
+  #         context: myContext
+  #         executor: gcp-cli/default
+  # commit:
+  #   jobs:
+  #     - build-and-push
+  # - omachikudasai: # <<< ジョブの続きを実行するには CircleCI の Web ページ上で手動で承認する必要があります。
+  #     type: approval # <<< このキーを使うと Workflow を「待機」状態にします
+  #     requires: # test2 が完了すると hold ジョブに処理が移ります
+  #       - build
+  #     filters:
+  #       branches:
+  #         only:
+  #           - master
+  # - nyao:
+  #     requires:
+  #       - omachikudasai

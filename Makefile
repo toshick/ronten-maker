@@ -40,6 +40,14 @@ deploy-gce:
 # 	gcloud run deploy --image gcr.io/ronten-maker/app4 --platform managed
 # 	afplay se/save-ja.mp3
 
-.PHONY: tryci
-tryci:
+.PHONY: ci
+checkci:
 	circleci config validate
+
+ci-build:
+	docker-compose build --no-cache
+	docker tag ronten-maker_ronten-app gcr.io/ronten-maker/app3
+
+ci-gcr-push:
+	gcloud docker -- push gcr.io/ronten-maker/app3
+	gcloud compute instances reset ronten-maker --project ronten-maker --zone asia-northeast1-b
