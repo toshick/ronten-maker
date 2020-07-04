@@ -1,14 +1,34 @@
 version: 2.1
 orbs:
-  # gcp-gcr: circleci/gcp-gcr@0.7.1
-  gcp-cli: circleci/gcp-cli@1.8.4
+  gcp-gcr: circleci/gcp-gcr@0.7.1
+  # gcp-cli: circleci/gcp-cli@1.8.4
 jobs:
-  ci-build:
+  build:
     machine: true
     steps:
       - checkout
       - run:
           command: make ci-build
+      - run:
+          command: |
+            docker images > /tmp/images.txt
+      - store_artifacts:
+          path: /tmp/images.txt
+  push-gcr:
+    executor: gcp-gcr/default
+    steps:
+      - checkout
+      - gcp-gcr/gcr-auth
+      - gcp-gcr/push-image:
+          digest-path: /tmp/digest.txt
+          image: orb-test
+          registry-url: eu.gcr.io
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
+      - run:
+          command: make ci-gce-reset
+
   # build-and-push:
   #   executor: gcp-gcr/default
   #   steps:
@@ -28,7 +48,7 @@ jobs:
 workflows:
   testbuild:
     jobs:
-      - ci-build
+      - build
   # install_and_configure_cli:
   #   jobs:
   #     - gcp-cli/install_and_initialize_cli:

@@ -27,7 +27,7 @@ test:
 .PHONY: deploy
 deploy-gce:
 	# wget -O "db/mydb.sqlite" http://ronten.website/api/storage/download
-	docker-compose build --no-cache
+	docker-compose -p ronten-maker build --no-cache
 	docker tag ronten-maker_ronten-app gcr.io/ronten-maker/app3
 	gcloud docker -- push gcr.io/ronten-maker/app3
 	gcloud compute instances reset ronten-maker --project ronten-maker --zone asia-northeast1-b
@@ -45,9 +45,11 @@ checkci:
 	circleci config validate
 
 ci-build:
-	docker-compose build --no-cache
-	docker tag ronten-maker_ronten-app gcr.io/ronten-maker/app3
+	docker-compose -p ronten-maker build --no-cache
+	docker tag rontenmaker_ronten-app gcr.io/ronten-maker/app3
 
 ci-gcr-push:
 	gcloud docker -- push gcr.io/ronten-maker/app3
+	
+ci-gce-reset:
 	gcloud compute instances reset ronten-maker --project ronten-maker --zone asia-northeast1-b
