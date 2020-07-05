@@ -69,9 +69,17 @@ workflows:
   build-and-push:
     jobs:
       - test
-      - build:
+      - approval:
+          type: approval
           requires:
             - test
+          filters:
+            branches:
+              only:
+                - master
+      - build:
+          requires:
+            - approval
           filters:
             branches:
               only:
@@ -91,14 +99,6 @@ workflows:
   # commit:
   #   jobs:
   #     - build-and-push
-  # - omachikudasai: # <<< ジョブの続きを実行するには CircleCI の Web ページ上で手動で承認する必要があります。
-  #     type: approval # <<< このキーを使うと Workflow を「待機」状態にします
-  #     requires: # test2 が完了すると hold ジョブに処理が移ります
-  #       - build
-  #     filters:
-  #       branches:
-  #         only:
-  #           - master
   # - nyao:
   #     requires:
   #       - omachikudasai
