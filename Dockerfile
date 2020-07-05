@@ -5,7 +5,7 @@ LABEL maintainer "toshick"
 ADD . /go/src/github.com/ronten-maker/
 WORKDIR /go/src/github.com/ronten-maker/front-ronten
 
-RUN npm ci && npm run generate
+RUN npm ci && npm test && npm run generate
 
 # golang
 FROM golang:1.13.4

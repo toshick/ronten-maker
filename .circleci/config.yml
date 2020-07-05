@@ -1,37 +1,104 @@
-version: 2
+version: 2.1
+
+# --------------------
+# orbs
+# --------------------
+orbs:
+  gcp-gcr: circleci/gcp-gcr@0.7.1
+  # gcp-cli: circleci/gcp-cli@1.8.4
+
+# --------------------
+# jobs
+# --------------------
 jobs:
-  build:
-    docker:
-      - image: circleci/node:13.8
-    steps:
-      - run: echo "hello world 1"
   test:
     docker:
-      - image: circleci/node:13.8
+      - image: circleci/golang:1.13
     steps:
-      - run: echo "hello world 2"
-  nyao:
-    docker:
-      - image: circleci/node:13.8
+      - checkout
+      - run:
+          command: make test-backend
+  build:
+    machine: true
     steps:
-      - run: echo "nyao"
+      - checkout
+      - run:
+          command: make ci-build
+      - run:
+          command: |
+            docker images > /tmp/images.txt
+      - store_artifacts:
+          path: /tmp/images.txt
+      # あとでpushするために保存
+      - run:
+          command: |
+            mkdir -p /tmp/docker
+            docker save gcr.io/ronten-maker/app3:latest -o /tmp/docker/image
+      - persist_to_workspace:
+          root: /tmp/docker
+          paths:
+            - image
 
+  push-gcr:
+    executor: gcp-gcr/default
+    steps:
+      # 保存してあるimageをロード
+      - attach_workspace:
+          at: /tmp/docker
+      - run: docker load -i /tmp/docker/image
+      - checkout
+      - gcp-gcr/gcr-auth
+      # push
+      - gcp-gcr/push-image:
+          digest-path: /tmp/digest.txt
+          registry-url: gcr.io
+          image: app3
+          tag: latest
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
+      - run:
+          command: make ci-gce-reset
+      - store_artifacts:
+          path: /tmp/digest.txt
+
+# --------------------
+# workflows
+# --------------------
 workflows:
-  version: 2
-  build_and_test:
+  build-and-push:
     jobs:
       - test
       - build:
           requires:
+            - approval
+          filters:
+            branches:
+              only:
+                - master
+      - approval:
+          type: approval
+          requires:
             - test
-      - omachikudasai: # <<< ジョブの続きを実行するには CircleCI の Web ページ上で手動で承認する必要があります。
-          type: approval # <<< このキーを使うと Workflow を「待機」状態にします
-          requires: # test2 が完了すると hold ジョブに処理が移ります
+          filters:
+            branches:
+              only:
+                - master
+      - push-gcr:
+          requires:
             - build
           filters:
             branches:
               only:
                 - master
-      - nyao:
-          requires:
-            - omachikudasai
+  # install_and_configure_cli:
+  #   jobs:
+  #     - gcp-cli/install_and_initialize_cli:
+  #         context: myContext
+  #         executor: gcp-cli/default
+  # commit:
+  #   jobs:
+  #     - build-and-push
+  # - nyao:
+  #     requires:
+  #       - omachikudasai
