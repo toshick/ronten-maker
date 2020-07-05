@@ -72,9 +72,17 @@ workflows:
       - build:
           requires:
             - test
+          filters:
+            branches:
+              only:
+                - master
       - push-gcr:
           requires:
             - build
+          filters:
+            branches:
+              only:
+                - master
   # install_and_configure_cli:
   #   jobs:
   #     - gcp-cli/install_and_initialize_cli:
