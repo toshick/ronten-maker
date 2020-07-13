@@ -69,15 +69,15 @@ workflows:
   build-and-push:
     jobs:
       - test
+      # - approval:
+      #     type: approval
+      #     requires:
+      #       - test
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
       - build:
-          requires:
-            - approval
-          filters:
-            branches:
-              only:
-                - master
-      - approval:
-          type: approval
           requires:
             - test
           filters:

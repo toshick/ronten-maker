@@ -3,7 +3,7 @@ variable "docker_declaration" {
   type = string
   # gcr.io/ronten-maker/app3
   # gcr.io/ronten-maker/ronten-maker
-  default = "spec:\n  containers:\n    - name: ronron-name\n      image: 'gcr.io/ronten-maker/ronten-maker'\n      stdin: false\n      tty: false\n  restartPolicy: Always\n"
+  default = "spec:\n  containers:\n    - name: ronron-name\n      image: 'gcr.io/ronten-maker/app3'\n      stdin: false\n      tty: false\n  restartPolicy: Always\n"
 }
 
 
