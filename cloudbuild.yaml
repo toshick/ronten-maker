@@ -1,14 +1,7 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args:
-      [
-        "build",
-        "-t",
-        "gcr.io/$PROJECT_ID/quickstart-image",
-        "-p",
-        "80:8888",
-        ".",
-      ]
-    # args: ["docker-compose", "-p", "ronten-maker"]
-images:
-  - "gcr.io/$PROJECT_ID/ronten-maker"
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/ronten-maker", "."]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/ronten-maker"]
+# images:
+#   - "gcr.io/$PROJECT_ID/ronten-maker"
